@@ -3,1769 +3,620 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>David Eti — DevOps & Cloud Infrastructure Engineer</title>
+  <title>david@eti:~$ — DevOps & Cloud Infrastructure</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" />
   <style>
-    /* ── RESET & TOKENS ─────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg:        #080d18;
-      --bg2:       #0d1525;
-      --bg3:       #111d32;
-      --border:    rgba(255,255,255,0.07);
-      --border2:   rgba(56,189,248,0.2);
-      --text:      #e2e8f0;
-      --sub:       #64748b;
-      --accent:    #38bdf8;
-      --accent2:   #818cf8;
-      --green:     #34d399;
-      --yellow:    #fbbf24;
-      --red:       #f87171;
-      --font-head: 'Syne', sans-serif;
-      --font-mono: 'Space Mono', monospace;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-mono);
-      font-size: 14px;
-      line-height: 1.7;
-      overflow-x: hidden;
-    }
-
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-
-    /* ── NOISE OVERLAY ──────────────────────────────────────── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.4;
-    }
-
-    /* ── GRID LINES ─────────────────────────────────────────── */
-    .grid-bg {
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(56,189,248,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(56,189,248,0.03) 1px, transparent 1px);
-      background-size: 60px 60px;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* ── NAV ────────────────────────────────────────────────── */
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      padding: 20px 48px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(8,13,24,0.85);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-logo {
-      font-family: var(--font-head);
-      font-weight: 800;
-      font-size: 18px;
-      color: var(--text);
-      letter-spacing: -0.5px;
-    }
-
-    .nav-logo span { color: var(--accent); }
-
-    .nav-links {
-      display: flex;
-      gap: 32px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--sub);
-      font-size: 12px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover { color: var(--accent); text-decoration: none; }
-
-    .nav-cta {
-      padding: 8px 20px;
-      background: transparent;
-      border: 1px solid var(--accent);
-      border-radius: 4px;
-      color: var(--accent) !important;
-      font-size: 12px !important;
-      letter-spacing: 0.1em;
-      transition: all 0.2s;
-    }
-
-    .nav-cta:hover {
-      background: var(--accent) !important;
-      color: var(--bg) !important;
-    }
-
-    /* ── SECTIONS ───────────────────────────────────────────── */
-    section {
-      position: relative;
-      z-index: 1;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 48px;
-    }
-
-    /* ── HERO ───────────────────────────────────────────────── */
-    #hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      padding: 120px 0 80px;
-    }
-
-    .hero-inner {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
-    }
-
-    .hero-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 12px;
-      background: rgba(56,189,248,0.08);
-      border: 1px solid rgba(56,189,248,0.2);
-      border-radius: 100px;
-      font-size: 11px;
-      color: var(--accent);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 24px;
-    }
-
-    .hero-tag::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--green);
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-
-    .hero-name {
-      font-family: var(--font-head);
-      font-size: clamp(48px, 6vw, 80px);
-      font-weight: 800;
-      line-height: 1;
-      letter-spacing: -2px;
-      color: var(--text);
-      margin-bottom: 12px;
-    }
-
-    .hero-name .accent { color: var(--accent); }
-
-    .hero-title {
-      font-family: var(--font-head);
-      font-size: 18px;
-      font-weight: 400;
-      color: var(--sub);
-      margin-bottom: 28px;
-      letter-spacing: 0;
-    }
-
-    .hero-desc {
-      font-size: 13px;
-      color: var(--sub);
-      line-height: 1.8;
-      max-width: 440px;
-      margin-bottom: 40px;
-    }
-
-    .hero-buttons {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .btn-primary {
-      padding: 12px 28px;
-      background: var(--accent);
-      color: var(--bg);
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-transform: uppercase;
-    }
-
-    .btn-primary:hover { opacity: 0.85; text-decoration: none; }
-
-    .btn-secondary {
-      padding: 12px 28px;
-      background: transparent;
-      color: var(--text);
-      font-family: var(--font-mono);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-transform: uppercase;
-    }
-
-    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
-
-    /* Hero right — terminal card */
-    .hero-terminal {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      font-family: var(--font-mono);
-      font-size: 12px;
-    }
-
-    .terminal-bar {
-      padding: 12px 16px;
-      background: var(--bg3);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .terminal-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-    }
-
-    .terminal-body {
-      padding: 24px;
-      line-height: 2;
-    }
-
-    .t-prompt { color: var(--green); }
-    .t-cmd    { color: var(--text); }
-    .t-out    { color: var(--sub); padding-left: 16px; }
-    .t-key    { color: var(--accent); }
-    .t-val    { color: var(--yellow); }
-    .t-cursor {
-      display: inline-block;
-      width: 8px;
-      height: 14px;
-      background: var(--accent);
-      animation: blink 1s step-end infinite;
-      vertical-align: middle;
-    }
-
-    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-
-    /* ── ABOUT ──────────────────────────────────────────────── */
-    #about {
-      padding: 100px 0;
-      border-top: 1px solid var(--border);
-    }
-
-    .section-label {
-      font-size: 11px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 16px;
-    }
-
-    .section-heading {
-      font-family: var(--font-head);
-      font-size: clamp(32px, 4vw, 48px);
-      font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -1px;
-      color: var(--text);
-      margin-bottom: 40px;
-    }
-
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 60px;
-      align-items: start;
-    }
-
-    .about-text p {
-      color: var(--sub);
-      font-size: 13px;
-      line-height: 1.9;
-      margin-bottom: 20px;
-    }
-
-    .about-text p strong { color: var(--text); }
-
-    .about-photo {
-      position: relative;
-    }
-
-    .photo-frame {
-      width: 100%;
-      aspect-ratio: 4/5;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .photo-frame img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    /* Placeholder when no image */
-    .photo-placeholder {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      color: var(--sub);
-      font-size: 12px;
-      letter-spacing: 0.1em;
-    }
-
-    .photo-placeholder .icon {
-      width: 64px;
-      height: 64px;
-      border-radius: 50%;
-      background: var(--bg3);
-      border: 2px dashed var(--border2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-    }
-
-    .photo-corner {
-      position: absolute;
-      width: 30px;
-      height: 30px;
-      border-color: var(--accent);
-      border-style: solid;
-    }
-
-    .photo-corner.tl { top: -8px; left: -8px; border-width: 2px 0 0 2px; }
-    .photo-corner.br { bottom: -8px; right: -8px; border-width: 0 2px 2px 0; }
-
-    .about-stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-top: 40px;
-    }
-
-    .stat-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 20px;
-    }
-
-    .stat-number {
-      font-family: var(--font-head);
-      font-size: 36px;
-      font-weight: 800;
-      color: var(--accent);
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-
-    .stat-label {
-      font-size: 11px;
-      color: var(--sub);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    /* ── SKILLS ─────────────────────────────────────────────── */
-    #skills {
-      padding: 100px 0;
-      border-top: 1px solid var(--border);
-    }
-
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      margin-top: 48px;
-    }
-
-    .skill-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 24px;
-      transition: border-color 0.2s, transform 0.2s;
-    }
-
-    .skill-card:hover {
-      border-color: var(--border2);
-      transform: translateY(-2px);
-    }
-
-    .skill-icon {
-      font-size: 24px;
-      margin-bottom: 14px;
-    }
-
-    .skill-title {
-      font-family: var(--font-head);
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 12px;
-    }
-
-    .skill-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .tag {
-      padding: 3px 8px;
-      background: rgba(56,189,248,0.06);
-      border: 1px solid rgba(56,189,248,0.15);
-      border-radius: 4px;
-      font-size: 10px;
-      color: var(--accent);
-      letter-spacing: 0.05em;
-    }
-
-    /* ── PROJECTS ───────────────────────────────────────────── */
-    #projects {
-      padding: 100px 0;
-      border-top: 1px solid var(--border);
-    }
-
-    .projects-list {
-      display: flex;
-      flex-direction: column;
-      gap: 32px;
-      margin-top: 48px;
-    }
-
-    .project-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      transition: border-color 0.2s;
-    }
-
-    .project-card:hover { border-color: var(--border2); }
-
-    .project-header {
-      padding: 32px 36px 24px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 24px;
-    }
-
-    .project-meta { flex: 1; }
-
-    .project-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 3px 10px;
-      background: rgba(52,211,153,0.08);
-      border: 1px solid rgba(52,211,153,0.2);
-      border-radius: 100px;
-      font-size: 10px;
-      color: var(--green);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    .project-badge::before {
-      content: '';
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: var(--green);
-    }
-
-    .project-title {
-      font-family: var(--font-head);
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--text);
-      letter-spacing: -0.5px;
-      margin-bottom: 8px;
-    }
-
-    .project-desc {
-      font-size: 12px;
-      color: var(--sub);
-      line-height: 1.8;
-      max-width: 600px;
-    }
-
-    .project-links {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      flex-shrink: 0;
-    }
-
-    .project-link {
-      padding: 8px 16px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 11px;
-      color: var(--sub);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      transition: all 0.2s;
-      text-align: center;
-      white-space: nowrap;
-    }
-
-    .project-link:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    .project-body {
-      padding: 24px 36px;
-    }
-
-    .project-highlights {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin-bottom: 24px;
-    }
-
-    .highlight {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      font-size: 12px;
-      color: var(--sub);
-      line-height: 1.6;
-    }
-
-    .highlight::before {
-      content: '→';
-      color: var(--accent);
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-
-    .project-stack {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
-    }
-
-    .stack-tag {
-      padding: 4px 10px;
-      background: var(--bg3);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      font-size: 10px;
-      color: var(--sub);
-      letter-spacing: 0.05em;
-    }
-
-    /* Architecture image slot */
-    .project-arch {
-      margin: 0 36px 28px;
-      border: 1px dashed var(--border);
-      border-radius: 8px;
-      padding: 24px;
-      text-align: center;
-      color: var(--sub);
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: border-color 0.2s;
-    }
-
-    .project-arch:hover { border-color: var(--border2); }
-    .project-arch-label { margin-top: 8px; }
-
-    .project-arch img {
-      max-width: 100%;
-      border-radius: 4px;
-      display: block;
-      margin: 0 auto;
-    }
-
-    /* ── DOCUMENTATION ──────────────────────────────────────── */
-    #documentation {
-      padding: 100px 0;
-      border-top: 1px solid var(--border);
-    }
-
-    .docs-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      margin-top: 48px;
-    }
-
-    .doc-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 28px 24px;
-      transition: all 0.2s;
-      cursor: pointer;
-    }
-
-    .doc-card:hover {
-      border-color: var(--border2);
-      transform: translateY(-2px);
-      text-decoration: none;
-    }
-
-    .doc-number {
-      font-family: var(--font-head);
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--accent);
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    .doc-title {
-      font-family: var(--font-head);
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 10px;
-      line-height: 1.3;
-    }
-
-    .doc-desc {
-      font-size: 11px;
-      color: var(--sub);
-      line-height: 1.7;
-    }
-
-    .doc-topics {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 16px;
-    }
-
-    .doc-topic {
-      padding: 2px 8px;
-      background: var(--bg3);
-      border-radius: 3px;
-      font-size: 10px;
-      color: var(--sub);
-    }
-
-    /* ── LEARNING JOURNEY ───────────────────────────────────── */
-    #journey {
-      padding: 100px 0;
-      border-top: 1px solid var(--border);
-    }
-
-    .timeline {
-      position: relative;
-      margin-top: 48px;
-      padding-left: 32px;
-    }
-
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 1px;
-      background: linear-gradient(to bottom, var(--accent), transparent);
-    }
-
-    .timeline-item {
-      position: relative;
-      padding-bottom: 40px;
-    }
-
-    .timeline-item::before {
-      content: '';
-      position: absolute;
-      left: -36px;
-      top: 6px;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent);
-      border: 2px solid var(--bg);
-    }
-
-    .timeline-date {
-      font-size: 11px;
-      color: var(--accent);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-
-    .timeline-title {
-      font-family: var(--font-head);
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 6px;
-    }
-
-    .timeline-body {
-      font-size: 12px;
-      color: var(--sub);
-      line-height: 1.8;
-      max-width: 600px;
-    }
-
-    /* ── CERTIFICATIONS ─────────────────────────────────────── */
-    #certs {
-      padding: 100px 0;
-      border-top: 1px solid var(--border);
-    }
-
-    .certs-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-top: 48px;
-    }
-
-    .cert-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 24px 20px;
-      text-align: center;
-    }
-
-    .cert-icon { font-size: 28px; margin-bottom: 12px; }
-
-    .cert-name {
-      font-family: var(--font-head);
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 6px;
-      line-height: 1.3;
-    }
-
-    .cert-status {
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 3px 10px;
-      border-radius: 100px;
-      display: inline-block;
-      margin-top: 8px;
-    }
-
-    .cert-status.done {
-      background: rgba(52,211,153,0.08);
-      border: 1px solid rgba(52,211,153,0.2);
-      color: var(--green);
-    }
-
-    .cert-status.progress {
-      background: rgba(251,191,36,0.08);
-      border: 1px solid rgba(251,191,36,0.2);
-      color: var(--yellow);
-    }
-
-    .cert-status.planned {
-      background: rgba(129,140,248,0.08);
-      border: 1px solid rgba(129,140,248,0.2);
-      color: var(--accent2);
-    }
-
-    /* ── CONTACT ────────────────────────────────────────────── */
-    #contact {
-      padding: 100px 0;
-      border-top: 1px solid var(--border);
-    }
-
-    .contact-inner {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 80px;
-      align-items: center;
-    }
-
-    .contact-text .section-heading { margin-bottom: 20px; }
-
-    .contact-text p {
-      font-size: 13px;
-      color: var(--sub);
-      line-height: 1.9;
-      margin-bottom: 32px;
-    }
-
-    .contact-links {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .contact-link {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 16px 20px;
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text);
-      font-size: 13px;
-      transition: all 0.2s;
-    }
-
-    .contact-link:hover {
-      border-color: var(--border2);
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    .contact-link-icon {
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-
-    .contact-link-label {
-      font-size: 10px;
-      color: var(--sub);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      display: block;
-      margin-bottom: 2px;
-    }
-
-    .contact-link-value {
-      font-size: 13px;
-      color: var(--text);
-    }
-
-    .availability-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 36px;
-    }
-
-    .availability-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .avail-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--green);
-      animation: pulse 2s infinite;
-    }
-
-    .avail-title {
-      font-family: var(--font-head);
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .avail-items {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .avail-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 12px;
-      color: var(--sub);
-    }
-
-    .avail-item::before {
-      content: '✓';
-      color: var(--green);
-      font-weight: 700;
-    }
-
-    /* ── FOOTER ─────────────────────────────────────────────── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 32px 48px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: relative;
-      z-index: 1;
-    }
-
-    .footer-left {
-      font-size: 11px;
-      color: var(--sub);
-    }
-
-    .footer-right {
-      font-size: 11px;
-      color: var(--sub);
-    }
-
-    .footer-right span { color: var(--accent); }
-
-    /* ── RESPONSIVE ─────────────────────────────────────────── */
-    @media (max-width: 900px) {
-      nav { padding: 16px 24px; }
-      .nav-links { display: none; }
-      .container { padding: 0 24px; }
-      .hero-inner { grid-template-columns: 1fr; gap: 48px; }
-      .about-grid { grid-template-columns: 1fr; }
-      .skills-grid { grid-template-columns: repeat(2, 1fr); }
-      .docs-grid { grid-template-columns: repeat(2, 1fr); }
-      .certs-grid { grid-template-columns: repeat(2, 1fr); }
-      .contact-inner { grid-template-columns: 1fr; }
-      .project-header { flex-direction: column; }
-      .project-highlights { grid-template-columns: 1fr; }
-      footer { flex-direction: column; gap: 12px; text-align: center; }
-    }
-
-    @media (max-width: 600px) {
-      .skills-grid { grid-template-columns: 1fr; }
-      .docs-grid { grid-template-columns: 1fr; }
-      .certs-grid { grid-template-columns: repeat(2, 1fr); }
-      .about-stats { grid-template-columns: 1fr 1fr; }
-    }
-
-    /* ── FADE IN ON SCROLL ──────────────────────────────────── */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ── MOBILE NAV ─────────────────────────────────────────── */
-    .nav-hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      padding: 4px;
-    }
-
-    .nav-hamburger span {
-      display: block;
-      width: 22px;
-      height: 2px;
-      background: var(--sub);
-      transition: all 0.2s;
-    }
-
-    @media (max-width: 900px) {
-      .nav-hamburger { display: flex; }
-      .nav-cta { display: none; }
+      --bg0:#0b0f10;--bg1:#11161b;--bg2:#161b22;--bg3:#1c2128;
+      --border:rgba(139,255,122,0.1);--bord2:rgba(139,255,122,0.22);
+      --text:#d6e2f0;--sub:#8b949e;--dim:#4d5566;
+      --green:#8bff7a;--blue:#58a6ff;--yellow:#ffb86b;--red:#ff6b6b;--purple:#d2a8ff;
+      --mono:'JetBrains Mono',monospace;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg0);color:var(--text);font-family:var(--mono);font-size:13px;line-height:1.6;overflow-x:hidden}
+    a{color:var(--green);text-decoration:none}
+    a:hover{text-decoration:underline}
+    #log-stream{position:fixed;top:0;left:0;right:0;bottom:0;overflow:hidden;pointer-events:none;z-index:0;opacity:.035}
+    .log-line{display:block;white-space:nowrap;font-size:11px;font-family:var(--mono);color:var(--green);padding:1px 0;position:absolute;animation:scrollup 28s linear infinite}
+    @keyframes scrollup{from{transform:translateY(100vh)}to{transform:translateY(-200px)}}
+    #boot-screen{position:fixed;inset:0;background:var(--bg0);z-index:1000;display:flex;align-items:center;justify-content:center;transition:opacity .6s ease}
+    #boot-screen.done{opacity:0;pointer-events:none}
+    .boot-text{font-family:var(--mono);color:var(--green);font-size:13px;line-height:2.2;max-width:520px;width:90%}
+    .boot-line{display:block}
+    .boot-line.dim{color:var(--sub)}
+    .boot-cursor{display:inline-block;width:8px;height:14px;background:var(--green);animation:blink 1s step-end infinite;vertical-align:middle;margin-left:2px}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+    #cmd-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);z-index:500;display:none;align-items:flex-start;justify-content:center;padding-top:18vh}
+    #cmd-overlay.open{display:flex}
+    #cmd-palette{background:var(--bg2);border:1px solid var(--bord2);border-radius:5px;width:540px;max-width:90vw;overflow:hidden}
+    #cmd-input-wrap{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border)}
+    #cmd-prompt{color:var(--green)}
+    #cmd-input{flex:1;background:none;border:none;outline:none;color:var(--text);font-family:var(--mono);font-size:13px}
+    #cmd-hint{font-size:10px;color:var(--dim);padding:5px 18px 3px}
+    .cmd-item{display:flex;align-items:center;gap:14px;padding:10px 18px;cursor:pointer;transition:background .1s}
+    .cmd-item:hover{background:rgba(139,255,122,.07)}
+    .cmd-item-icon{color:var(--green);font-size:12px;width:16px}
+    .cmd-item-label{color:var(--text);font-size:12px}
+    .cmd-item-key{margin-left:auto;font-size:10px;color:var(--dim)}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(11,15,16,.93);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 32px;height:42px;display:flex;align-items:center}
+    .nav-prompt{color:var(--green);font-size:12px;white-space:nowrap}
+    .nav-sep{color:var(--dim);margin:0 1px}
+    .nav-links{display:flex;gap:0;list-style:none;margin-left:24px}
+    .nav-links a{color:var(--sub);font-size:11px;padding:0 13px;height:42px;display:flex;align-items:center;transition:color .15s,background .15s;letter-spacing:.02em}
+    .nav-links a:hover{color:var(--green);background:rgba(139,255,122,.04);text-decoration:none}
+    .nav-right{margin-left:auto;display:flex;align-items:center;gap:14px}
+    .nav-cmd-hint{font-size:10px;color:var(--dim);border:1px solid var(--border);border-radius:3px;padding:2px 7px;cursor:pointer;transition:color .15s,border-color .15s}
+    .nav-cmd-hint:hover{color:var(--green);border-color:var(--bord2)}
+    .nav-cv{font-size:11px;color:var(--green);border:1px solid var(--bord2);border-radius:3px;padding:4px 12px;transition:background .15s}
+    .nav-cv:hover{background:rgba(139,255,122,.08);text-decoration:none}
+    main{position:relative;z-index:1}
+    .container{max-width:1080px;margin:0 auto;padding:0 32px}
+    section{padding:80px 0;border-top:1px solid var(--border)}
+    .sh{display:flex;align-items:center;gap:12px;margin-bottom:48px}
+    .sh-prompt{color:var(--green);font-size:12px}
+    .sh-cmd{color:var(--text);font-size:12px}
+    .sh-line{flex:1;height:1px;background:var(--border)}
+    #hero{min-height:100vh;display:flex;align-items:center;padding-top:80px;border-top:none}
+    .hero-grid{display:grid;grid-template-columns:1fr 380px;gap:36px;align-items:start;width:100%}
+    .term-panel{background:var(--bg1);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+    .term-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:8px 14px;display:flex;align-items:center;gap:6px}
+    .term-dot{width:10px;height:10px;border-radius:50%}
+    .term-title{margin-left:8px;font-size:11px;color:var(--sub)}
+    .term-body{padding:20px 18px;line-height:2.1}
+    .tl{display:block;font-size:12px}
+    .tp{color:var(--green)}.tc{color:var(--text)}.tk{color:var(--blue)}.tv{color:var(--yellow)}.ts{color:var(--sub)}.tg{color:var(--green)}
+    .hero-name{display:block;font-size:clamp(26px,3.5vw,40px);color:var(--green);font-weight:700;letter-spacing:-.5px;margin:4px 0 2px 18px;line-height:1.1}
+    .hero-role{display:block;font-size:14px;color:var(--sub);margin-left:18px;margin-bottom:8px}
+    .metrics-panel{background:var(--bg1);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+    .metrics-bar{background:var(--bg2);border-bottom:1px solid var(--border);padding:8px 14px;font-size:11px;color:var(--sub);display:flex;justify-content:space-between;align-items:center}
+    .metrics-bar span{color:var(--green)}
+    .metric-row{display:flex;align-items:center;padding:8px 16px;border-bottom:1px solid rgba(139,255,122,.04);gap:12px;font-size:12px}
+    .metric-key{color:var(--sub);width:130px;flex-shrink:0}
+    .metric-bar-wrap{flex:1;height:6px;background:var(--bg3);border-radius:2px;overflow:hidden}
+    .metric-bar-fill{height:100%;border-radius:2px;transition:width 1.5s ease;width:0}
+    .metric-val{color:var(--text);width:40px;text-align:right;flex-shrink:0;font-size:11px}
+    .metric-status{display:flex;align-items:center;padding:8px 16px;border-bottom:1px solid rgba(139,255,122,.04);gap:12px;font-size:12px}
+    .metric-status:last-child{border-bottom:none}
+    .metric-status-key{color:var(--sub);width:130px;flex-shrink:0}
+    .metric-status-val{font-size:11px}
+    .status-ok{color:var(--green)}.status-warn{color:var(--yellow)}
+    .btn{font-family:var(--mono);font-size:11px;padding:8px 18px;border-radius:3px;cursor:pointer;letter-spacing:.05em;transition:all .15s;border:none}
+    .btn-green{background:rgba(139,255,122,.12);border:1px solid var(--bord2);color:var(--green)}
+    .btn-green:hover{background:rgba(139,255,122,.2);text-decoration:none}
+    .btn-outline{background:transparent;border:1px solid var(--border);color:var(--sub)}
+    .btn-outline:hover{border-color:var(--bord2);color:var(--text);text-decoration:none}
+    .infra-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .panel{background:var(--bg1);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+    .panel-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:8px 14px;font-size:11px;color:var(--sub);display:flex;justify-content:space-between}
+    .panel-header-title{color:var(--green)}
+    .panel-body{padding:16px}
+    .profile-photo{width:60px;height:60px;border-radius:3px;border:1px solid var(--border);object-fit:cover;display:block;margin-bottom:14px}
+    .profile-text{font-size:12px;color:var(--sub);line-height:1.9}
+    .profile-text strong{color:var(--text)}
+    .kv-list{display:flex;flex-direction:column;gap:0}
+    .kv{display:flex;font-size:12px;gap:8px;padding:6px 0;border-bottom:1px solid rgba(139,255,122,.04)}
+    .kv:last-child{border-bottom:none}
+    .kv-k{color:var(--blue);width:110px;flex-shrink:0}
+    .kv-v{color:var(--text)}
+    .kv-v.green{color:var(--green)}.kv-v.yellow{color:var(--yellow)}.kv-v.sub{color:var(--sub)}
+    .skills-table{background:var(--bg1);border:1px solid var(--border);border-radius:4px;overflow:hidden;width:100%}
+    .skills-table-header{background:var(--bg2);border-bottom:1px solid var(--border);display:grid;grid-template-columns:170px 1fr 140px;padding:8px 16px;font-size:10px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
+    .skill-row{display:grid;grid-template-columns:170px 1fr 140px;padding:10px 16px;border-bottom:1px solid rgba(139,255,122,.04);align-items:center;transition:background .1s}
+    .skill-row:last-child{border-bottom:none}
+    .skill-row:hover{background:rgba(139,255,122,.03)}
+    .skill-cat{color:var(--blue);font-size:12px}
+    .skill-tags{display:flex;flex-wrap:wrap;gap:5px}
+    .stag{font-size:10px;padding:2px 7px;background:var(--bg3);border:1px solid var(--border);border-radius:2px;color:var(--sub)}
+    .stag.hi{border-color:rgba(88,166,255,.2);color:var(--blue);background:rgba(88,166,255,.05)}
+    .stag.gr{border-color:rgba(139,255,122,.15);color:var(--green);background:rgba(139,255,122,.04)}
+    .skill-level{font-size:10px;text-align:right;color:var(--sub)}
+    .level-prod{color:var(--green)!important}.level-learn{color:var(--yellow)!important}
+    .service-card{background:var(--bg1);border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:20px;transition:border-color .2s}
+    .service-card:hover{border-color:var(--bord2)}
+    .service-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:10px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+    .service-name{color:var(--green);font-size:12px;font-weight:700}
+    .service-status-badge{font-size:10px;padding:2px 8px;border-radius:2px;letter-spacing:.08em}
+    .badge-ok{background:rgba(139,255,122,.1);border:1px solid rgba(139,255,122,.25);color:var(--green)}
+    .badge-warn{background:rgba(255,184,107,.1);border:1px solid rgba(255,184,107,.25);color:var(--yellow)}
+    .service-links{margin-left:auto;display:flex;gap:8px}
+    .service-link{font-size:10px;color:var(--sub);padding:2px 10px;border:1px solid var(--border);border-radius:2px;transition:all .15s}
+    .service-link:hover{color:var(--green);border-color:var(--bord2);text-decoration:none}
+    .service-body{display:grid;grid-template-columns:260px 1fr;border-bottom:1px solid var(--border)}
+    .service-meta{border-right:1px solid var(--border);padding:14px 16px}
+    .service-desc{padding:14px 16px;font-size:12px;color:var(--sub);line-height:1.9}
+    .service-arch{border-top:1px solid var(--border);padding:14px 18px}
+    .arch-label{font-size:10px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+    .arch-img{width:100%;border-radius:3px;border:1px solid var(--border);display:block}
+    .arch-placeholder{border:1px dashed var(--border);border-radius:3px;padding:16px;text-align:center;color:var(--dim);font-size:11px}
+    .service-highlights{padding:10px 18px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:6px}
+    .hl{font-size:10px;color:var(--sub)}.hl::before{content:'→ ';color:var(--green)}
+    .service-stack{padding:10px 18px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:5px}
+    .incident-log{background:var(--bg1);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+    .incident-log-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:8px 16px;display:flex;align-items:center;gap:12px;font-size:11px}
+    .ilog-title{color:var(--red)}
+    .incident-row{border-bottom:1px solid rgba(139,255,122,.04);cursor:pointer;transition:background .1s}
+    .incident-row:last-child{border-bottom:none}
+    .incident-row:hover{background:rgba(139,255,122,.02)}
+    .incident-summary{display:grid;grid-template-columns:110px 70px 1fr 90px 80px;padding:11px 16px;align-items:center;gap:10px;font-size:11px}
+    .inc-id{color:var(--blue);font-weight:500}
+    .inc-sev{font-size:10px;padding:2px 7px;border-radius:2px;text-align:center}
+    .sev-high{background:rgba(255,107,107,.1);border:1px solid rgba(255,107,107,.25);color:var(--red)}
+    .sev-med{background:rgba(255,184,107,.1);border:1px solid rgba(255,184,107,.25);color:var(--yellow)}
+    .inc-title{color:var(--text)}
+    .inc-date{color:var(--dim);font-size:10px;text-align:right}
+    .inc-status{font-size:10px;text-align:right}.resolved{color:var(--green)}
+    .incident-detail{display:none;padding:0 16px 16px;border-top:1px solid var(--border)}
+    .incident-detail.open{display:block}
+    .inc-section{margin-top:12px}
+    .inc-section-label{font-size:10px;color:var(--blue);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+    .inc-section-body{font-size:11px;color:var(--sub);line-height:1.9}
+    .inc-section-body code{color:var(--yellow);background:var(--bg3);padding:1px 5px;border-radius:2px;font-family:var(--mono)}
+    .deploy-timeline{position:relative;padding-left:24px}
+    .deploy-timeline::before{content:'';position:absolute;left:0;top:8px;bottom:0;width:1px;background:linear-gradient(to bottom,var(--green) 0%,rgba(139,255,122,.1) 80%,transparent 100%)}
+    .deploy-item{position:relative;padding-bottom:32px}
+    .deploy-item::before{content:'';position:absolute;left:-28px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--green);border:2px solid var(--bg0);box-shadow:0 0 0 1px var(--green)}
+    .deploy-tag{font-size:10px;color:var(--green);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+    .deploy-title{font-size:13px;color:var(--text);font-weight:500;margin-bottom:4px}
+    .deploy-body{font-size:12px;color:var(--sub);line-height:1.8;max-width:640px}
+    .cert-table{background:var(--bg1);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+    .cert-table-header{background:var(--bg2);border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 150px 110px;padding:8px 16px;font-size:10px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
+    .cert-row{display:grid;grid-template-columns:1fr 150px 110px;padding:10px 16px;border-bottom:1px solid rgba(139,255,122,.04);align-items:center;font-size:12px}
+    .cert-row:last-child{border-bottom:none}
+    .cert-name-cell{color:var(--text)}
+    .cert-provider{color:var(--sub);font-size:11px}
+    .cert-status-cell{font-size:10px;padding:2px 8px;border-radius:2px;text-align:center;width:fit-content}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .connect-link{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(139,255,122,.04);font-size:12px;color:var(--text);transition:color .15s}
+    .connect-link:last-child{border-bottom:none}
+    .connect-link:hover{color:var(--green);text-decoration:none}
+    .connect-icon{color:var(--green);width:16px}
+    .connect-label{color:var(--dim);font-size:10px;width:55px}
+    footer{border-top:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:1}
+    .footer-left{font-size:11px;color:var(--dim)}
+    .footer-right{font-size:11px;color:var(--dim)}
+    .footer-right span{color:var(--green)}
+    .fi{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
+    .fi.vis{opacity:1;transform:none}
+    @media(max-width:860px){
+      nav{padding:0 14px}.nav-links{display:none}
+      .container{padding:0 14px}
+      section{padding:52px 0}
+      .hero-grid{grid-template-columns:1fr}
+      .infra-grid{grid-template-columns:1fr}
+      .service-body{grid-template-columns:1fr}
+      .service-meta{border-right:none;border-bottom:1px solid var(--border)}
+      .incident-summary{grid-template-columns:100px 1fr 70px}
+      .inc-date,.inc-sev{display:none}
+      .contact-grid{grid-template-columns:1fr}
+      .skills-table-header{display:none}
+      .skill-row{grid-template-columns:1fr;gap:6px}
+      .skill-level{text-align:left}
+      .cert-table-header{display:none}
+      .cert-row{grid-template-columns:1fr 100px}
+      .cert-provider{display:none}
+      footer{flex-direction:column;gap:8px;text-align:center}
     }
   </style>
 </head>
 <body>
-
-<div class="grid-bg"></div>
-
-<!-- NAV -->
+<div id="log-stream" aria-hidden="true"></div>
+<div id="boot-screen">
+  <div class="boot-text" id="boot-lines"></div>
+</div>
+<div id="cmd-overlay" onclick="closePalette(event)">
+  <div id="cmd-palette">
+    <div id="cmd-input-wrap">
+      <span id="cmd-prompt">$</span>
+      <input id="cmd-input" placeholder="type a command..." autocomplete="off" spellcheck="false"/>
+    </div>
+    <div id="cmd-hint">ctrl+k to open &nbsp;·&nbsp; esc to close</div>
+    <div id="cmd-list">
+      <div class="cmd-item" onclick="runCmd('github')"><span class="cmd-item-icon">⌥</span><span class="cmd-item-label">open github</span><span class="cmd-item-key">↩</span></div>
+      <div class="cmd-item" onclick="runCmd('linkedin')"><span class="cmd-item-icon">⌥</span><span class="cmd-item-label">open linkedin</span><span class="cmd-item-key">↩</span></div>
+      <div class="cmd-item" onclick="runCmd('cv')"><span class="cmd-item-icon">⌥</span><span class="cmd-item-label">download cv</span><span class="cmd-item-key">↩</span></div>
+      <div class="cmd-item" onclick="runCmd('projects')"><span class="cmd-item-icon">⌥</span><span class="cmd-item-label">cd projects/</span><span class="cmd-item-key">↩</span></div>
+      <div class="cmd-item" onclick="runCmd('incidents')"><span class="cmd-item-icon">⌥</span><span class="cmd-item-label">cat incident-log</span><span class="cmd-item-key">↩</span></div>
+      <div class="cmd-item" onclick="runCmd('contact')"><span class="cmd-item-icon">⌥</span><span class="cmd-item-label">ssh contact</span><span class="cmd-item-key">↩</span></div>
+    </div>
+  </div>
+</div>
 <nav>
-  <div class="nav-logo">DE<span>.</span></div>
+  <span class="nav-prompt">david@eti<span class="nav-sep">:</span>~<span class="nav-sep">$</span></span>
   <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#documentation">Docs</a></li>
-    <li><a href="#journey">Journey</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="David_Eti_CV.pdf" target="_blank" class="nav-cta">Resume ↗</a></li>
+    <li><a href="#infrastructure">cd about/</a></li>
+    <li><a href="#skills">ls skills/</a></li>
+    <li><a href="#projects">ps services</a></li>
+    <li><a href="#incidents">cat incidents</a></li>
+    <li><a href="#journey">git log</a></li>
+    <li><a href="#contact">ssh contact</a></li>
   </ul>
-  <div class="nav-hamburger" onclick="toggleMobileNav()">
-    <span></span><span></span><span></span>
+  <div class="nav-right">
+    <div class="nav-cmd-hint" onclick="openPalette()">⌘K</div>
+    <a href="David_Eti_CV.pdf" target="_blank" class="nav-cv">./resume.pdf ↗</a>
   </div>
 </nav>
-
-<!-- HERO -->
+<main>
 <section id="hero">
-  <div class="container">
-    <div class="hero-inner">
-      <div class="hero-left">
-        <div class="hero-tag">Available for DevOps & SysAdmin roles</div>
-        <h1 class="hero-name">David<br /><span class="accent">Eti</span></h1>
-        <p class="hero-title">DevOps & Cloud Infrastructure Engineer</p>
-        <p class="hero-desc">
-          Building production-grade AWS infrastructure from the ground up — 
-          Terraform, Docker, ECS Fargate, GitHub Actions CI/CD. 
-          Based in Belgium. Targeting roles in Belgium and the Netherlands.
-        </p>
-        <div class="hero-buttons">
-          <a href="#projects" class="btn-primary">View Projects</a>
-          <a href="#contact" class="btn-secondary">Get in Touch</a>
-        </div>
+<div class="container">
+  <div class="hero-grid">
+    <div class="term-panel fi">
+      <div class="term-bar">
+        <div class="term-dot" style="background:#ff6b6b"></div>
+        <div class="term-dot" style="background:#ffb86b"></div>
+        <div class="term-dot" style="background:#8bff7a"></div>
+        <span class="term-title">david@eti — ssh session</span>
       </div>
-
-      <div class="hero-right">
-        <div class="hero-terminal">
-          <div class="terminal-bar">
-            <div class="terminal-dot" style="background:#f87171"></div>
-            <div class="terminal-dot" style="background:#fbbf24"></div>
-            <div class="terminal-dot" style="background:#34d399"></div>
-            <span style="color:var(--sub);font-size:11px;margin-left:8px">~/david-eti</span>
+      <div class="term-body">
+        <span class="tl"><span class="tp">$</span> <span class="tc">ssh david@eti.infrastructure</span></span>
+        <span class="tl ts">Connecting to eti.infrastructure...</span>
+        <span class="tl ts">Authentication successful.</span>
+        <span class="tl ts">Loading profile...</span>
+        <span class="tl">&nbsp;</span>
+        <span class="tl"><span class="tp">$</span> <span class="tc">whoami</span></span>
+        <span class="hero-name">David Eti</span>
+        <span class="hero-role">DevOps &amp; Cloud Infrastructure Engineer</span>
+        <span class="tl">&nbsp;</span>
+        <span class="tl"><span class="tp">$</span> <span class="tc">cat .profile</span></span>
+        <span class="tl"><span class="tk">location  </span><span class="tv">"Belgium"</span></span>
+        <span class="tl"><span class="tk">targeting </span><span class="tv">"Belgium · Netherlands"</span></span>
+        <span class="tl"><span class="tk">stack     </span><span class="tv">["AWS","Terraform","Docker","ECS"]</span></span>
+        <span class="tl"><span class="tk">learning  </span><span class="tv">["Kubernetes","Helm","Grafana"]</span></span>
+        <span class="tl"><span class="tk">available </span><span class="tg">true</span></span>
+        <span class="tl"><span class="tk">faith     </span><span class="tv">"Jesus at the centre"</span></span>
+        <span class="tl">&nbsp;</span>
+        <span class="tl"><span class="tp">$</span> <span class="tc">_</span><span class="boot-cursor"></span></span>
+      </div>
+      <div style="padding:0 18px 16px;display:flex;gap:10px">
+        <a href="#projects" class="btn btn-green">ps services</a>
+        <a href="#contact" class="btn btn-outline">ssh contact</a>
+        <a href="David_Eti_CV.pdf" target="_blank" class="btn btn-outline">./resume.pdf</a>
+      </div>
+    </div>
+    <div>
+      <div class="metrics-panel fi" style="transition-delay:.15s">
+        <div class="metrics-bar"><span>system monitor</span><span id="live-time">--:--:--</span></div>
+        <div class="metric-row"><div class="metric-key">cpu_usage</div><div class="metric-bar-wrap"><div class="metric-bar-fill" id="bar-cpu"></div></div><div class="metric-val" id="val-cpu">--</div></div>
+        <div class="metric-row"><div class="metric-key">memory</div><div class="metric-bar-wrap"><div class="metric-bar-fill" id="bar-mem" style="background:#58a6ff"></div></div><div class="metric-val" id="val-mem">--</div></div>
+        <div class="metric-row"><div class="metric-key">learning_load</div><div class="metric-bar-wrap"><div class="metric-bar-fill" id="bar-lrn" style="background:#ffb86b"></div></div><div class="metric-val" id="val-lrn">--</div></div>
+        <div class="metric-status"><div class="metric-status-key">ecs_tasks</div><div class="metric-status-val status-ok">● HEALTHY</div></div>
+        <div class="metric-status"><div class="metric-status-key">redis</div><div class="metric-status-val status-ok">● CONNECTED</div></div>
+        <div class="metric-status"><div class="metric-status-key">ci_pipeline</div><div class="metric-status-val status-ok">● PASSING</div></div>
+        <div class="metric-status"><div class="metric-status-key">mongodb_atlas</div><div class="metric-status-val status-ok">● CONNECTED</div></div>
+        <div class="metric-status"><div class="metric-status-key">terraform_state</div><div class="metric-status-val status-ok">● CLEAN</div></div>
+        <div class="metric-status"><div class="metric-status-key">open_to_work</div><div class="metric-status-val status-ok">● TRUE</div></div>
+        <div class="metric-status"><div class="metric-status-key">kubernetes</div><div class="metric-status-val status-warn">⟳ LOADING...</div></div>
+      </div>
+      <div class="metrics-panel fi" style="margin-top:14px;transition-delay:.25s">
+        <div class="metrics-bar"><span>devops_curriculum</span><span>8/15 modules</span></div>
+        <div style="padding:12px 16px">
+          <div style="display:flex;gap:3px;margin-bottom:6px">
+            <div style="flex:1;height:6px;background:#8bff7a;border-radius:1px" title="Docker"></div>
+            <div style="flex:1;height:6px;background:#8bff7a;border-radius:1px" title="Networking"></div>
+            <div style="flex:1;height:6px;background:#8bff7a;border-radius:1px" title="ECS"></div>
+            <div style="flex:1;height:6px;background:#8bff7a;border-radius:1px" title="ALB"></div>
+            <div style="flex:1;height:6px;background:#8bff7a;border-radius:1px" title="IAM"></div>
+            <div style="flex:1;height:6px;background:#8bff7a;border-radius:1px" title="CI/CD"></div>
+            <div style="flex:1;height:6px;background:#8bff7a;border-radius:1px" title="Observability"></div>
+            <div style="flex:1;height:6px;background:#8bff7a;border-radius:1px" title="Scaling"></div>
+            <div style="flex:1;height:6px;background:#58a6ff;border-radius:1px;opacity:.5" title="Security"></div>
+            <div style="flex:1;height:6px;background:#58a6ff;border-radius:1px;opacity:.5" title="Stateful"></div>
+            <div style="flex:1;height:6px;background:var(--bg3);border-radius:1px" title="Kubernetes"></div>
+            <div style="flex:1;height:6px;background:var(--bg3);border-radius:1px" title="Helm"></div>
+            <div style="flex:1;height:6px;background:var(--bg3);border-radius:1px" title="Grafana"></div>
+            <div style="flex:1;height:6px;background:var(--bg3);border-radius:1px" title="Interview"></div>
+            <div style="flex:1;height:6px;background:var(--bg3);border-radius:1px" title="Capstone"></div>
           </div>
-          <div class="terminal-body">
-            <div><span class="t-prompt">david@cloud</span> <span class="t-cmd">$ whoami</span></div>
-            <div class="t-out"><span class="t-key">name:</span>     <span class="t-val">"David Eti"</span></div>
-            <div class="t-out"><span class="t-key">role:</span>     <span class="t-val">"DevOps Engineer"</span></div>
-            <div class="t-out"><span class="t-key">location:</span> <span class="t-val">"Belgium"</span></div>
-            <div class="t-out"><span class="t-key">stack:</span>    <span class="t-val">["AWS","Terraform","Docker","Linux"]</span></div>
-            <div class="t-out"><span class="t-key">learning:</span> <span class="t-val">["Kubernetes","Grafana"]</span></div>
-            <div class="t-out"><span class="t-key">open:</span>     <span class="t-val">true</span></div>
-            <br/>
-            <div><span class="t-prompt">david@cloud</span> <span class="t-cmd">$ </span><span class="t-cursor"></span></div>
+          <div style="display:flex;gap:14px;font-size:10px;color:var(--sub)">
+            <span style="color:#8bff7a">■ completed (8)</span>
+            <span style="color:#58a6ff">■ in progress (2)</span>
+            <span style="color:var(--dim)">■ upcoming (5)</span>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 </section>
-
-<!-- ABOUT -->
-<section id="about">
-  <div class="container">
-    <div class="fade-in">
-      <div class="section-label">// 01 — About</div>
-      <h2 class="section-heading">From VFX pipelines<br/>to cloud infrastructure</h2>
+<section id="infrastructure">
+<div class="container">
+  <div class="sh fi"><span class="sh-prompt">david@eti:~$</span><span class="sh-cmd">cat about.md</span><div class="sh-line"></div></div>
+  <div class="infra-grid fi">
+    <div class="panel">
+      <div class="panel-header"><span class="panel-header-title">profile.conf</span><span style="color:var(--green);font-size:10px">● active</span></div>
+      <div class="panel-body">
+        <img src="images/david.jpg" alt="David Eti" class="profile-photo" onerror="this.style.display='none'"/>
+        <div class="profile-text">I come from an unusual background — three years studying <strong>Visual Effects</strong> at Howest DAE, building procedural simulations and learning to think in systems.<br/><br/>That systems-thinking transferred directly into infrastructure. I deliberately rebuilt myself as a <strong>Cloud &amp; Infrastructure Engineer</strong> by building and breaking real production systems — not through tutorials alone.<br/><br/>Currently completing my BA at <strong>Howest</strong> and interning at <strong>Barco</strong> (Immersive Experiences). Faith is at the centre of how I work.</div>
+      </div>
     </div>
-    <div class="about-grid">
-      <div class="about-text fade-in">
-        <p>
-          I come from an unusual background for a DevOps engineer — three years studying 
-          <strong>Visual Effects</strong> at Howest DAE, building procedural simulations and 
-          learning to think in systems. That systems-thinking transferred directly into infrastructure.
-        </p>
-        <p>
-          Over the past year I deliberately rebuilt myself as a <strong>Cloud & Infrastructure Engineer</strong>. 
-          Not through courses alone — through building and breaking real production systems. 
-          I designed and shipped <strong>Novagram</strong>, a full-stack application running on 
-          AWS ECS Fargate with modular Terraform, GitHub Actions CI/CD with OIDC authentication, 
-          and Redis Pub/Sub for WebSocket scaling.
-        </p>
-        <p>
-          I understand why architecture decisions are made — not just how to execute them. 
-          Currently interning at <strong>Barco</strong> (Immersive Experiences) and actively 
-          targeting DevOps and SysAdmin roles in Belgium and the Netherlands.
-        </p>
-        <p style="color:var(--accent);font-size:12px;">
-          Faith is at the centre of everything I do — I build with integrity, never cut corners, 
-          and aim to create work worth being proud of.
-        </p>
-        <div class="about-stats">
-          <div class="stat-card">
-            <div class="stat-number">15+</div>
-            <div class="stat-label">Terraform resources designed</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-number">3</div>
-            <div class="stat-label">Production app versions shipped</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-number">8</div>
-            <div class="stat-label">DevOps modules completed</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-number">2</div>
-            <div class="stat-label">Cloud projects in production</div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="panel">
+        <div class="panel-header"><span class="panel-header-title">system.info</span></div>
+        <div class="panel-body">
+          <div class="kv-list">
+            <div class="kv"><span class="kv-k">NAME</span><span class="kv-v">David Eti</span></div>
+            <div class="kv"><span class="kv-k">ROLE</span><span class="kv-v">DevOps / Cloud Infra Engineer</span></div>
+            <div class="kv"><span class="kv-k">LOCATION</span><span class="kv-v">Belgium</span></div>
+            <div class="kv"><span class="kv-k">TARGETING</span><span class="kv-v">Belgium · Netherlands</span></div>
+            <div class="kv"><span class="kv-k">STATUS</span><span class="kv-v green">open_to_work=true</span></div>
+            <div class="kv"><span class="kv-k">AVAILABLE</span><span class="kv-v">May 2026</span></div>
+            <div class="kv"><span class="kv-k">AUTH</span><span class="kv-v sub">Belgium Student Permit</span></div>
+            <div class="kv"><span class="kv-k">LANGUAGES</span><span class="kv-v">English (fluent) · Dutch (learning)</span></div>
           </div>
         </div>
       </div>
-      <div class="about-photo fade-in">
-        <div style="position:relative;display:inline-block;width:100%">
-          <div class="photo-corner tl"></div>
-          <div class="photo-corner br"></div>
-          <div class="photo-frame">
-
-
-            <div class="photo-placeholder">
-              <img src="images/david.jpg" alt="David Eti" />
-            </div>
+      <div class="panel">
+        <div class="panel-header"><span class="panel-header-title">current.process</span></div>
+        <div class="panel-body">
+          <div class="kv-list">
+            <div class="kv"><span class="kv-k">INTERNSHIP</span><span class="kv-v">Barco · Feb–Jun 2026</span></div>
+            <div class="kv"><span class="kv-k">EDUCATION</span><span class="kv-v">BA VFX · Howest 2022–2026</span></div>
+            <div class="kv"><span class="kv-k">PROJECT</span><span class="kv-v green">Novagram v3 shipped ✓</span></div>
+            <div class="kv"><span class="kv-k">LEARNING</span><span class="kv-v yellow">Kubernetes (EKS) →</span></div>
+            <div class="kv"><span class="kv-k">CERT</span><span class="kv-v yellow">AZ-900 in progress →</span></div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 </section>
-
-<!-- SKILLS -->
 <section id="skills">
-  <div class="container">
-    <div class="fade-in">
-      <div class="section-label">// 02 — Skills</div>
-      <h2 class="section-heading">Technical stack</h2>
-    </div>
-    <div class="skills-grid">
-      <div class="skill-card fade-in">
-        <div class="skill-icon">☁️</div>
-        <div class="skill-title">Cloud & IaC</div>
-        <div class="skill-tags">
-          <span class="tag">ECS Fargate</span>
-          <span class="tag">ECR</span>
-          <span class="tag">IAM</span>
-          <span class="tag">ALB</span>
-          <span class="tag">VPC</span>
-          <span class="tag">CloudWatch</span>
-          <span class="tag">S3</span>
-          <span class="tag">SSM</span>
-          <span class="tag">Secrets Manager</span>
-          <span class="tag">Terraform</span>
-        </div>
-      </div>
-      <div class="skill-card fade-in">
-        <div class="skill-icon">🐳</div>
-        <div class="skill-title">Containers & Orchestration</div>
-        <div class="skill-tags">
-          <span class="tag">Docker</span>
-          <span class="tag">Multi-stage builds</span>
-          <span class="tag">Docker Compose</span>
-          <span class="tag">Trivy</span>
-          <span class="tag">Kubernetes</span>
-          <span class="tag">Helm</span>
-        </div>
-      </div>
-      <div class="skill-card fade-in">
-        <div class="skill-icon">⚙️</div>
-        <div class="skill-title">CI/CD</div>
-        <div class="skill-tags">
-          <span class="tag">GitHub Actions</span>
-          <span class="tag">OIDC Auth</span>
-          <span class="tag">Immutable tags</span>
-          <span class="tag">Pipeline gates</span>
-          <span class="tag">ECS deployments</span>
-        </div>
-      </div>
-      <div class="skill-card fade-in">
-        <div class="skill-icon">📊</div>
-        <div class="skill-title">Observability</div>
-        <div class="skill-tags">
-          <span class="tag">CloudWatch</span>
-          <span class="tag">Structured logging</span>
-          <span class="tag">Grafana</span>
-          <span class="tag">Prometheus</span>
-          <span class="tag">ALB Health Checks</span>
-        </div>
-      </div>
-      <div class="skill-card fade-in">
-        <div class="skill-icon">🌐</div>
-        <div class="skill-title">Networking</div>
-        <div class="skill-tags">
-          <span class="tag">TCP/IP</span>
-          <span class="tag">DNS</span>
-          <span class="tag">NAT</span>
-          <span class="tag">Subnetting</span>
-          <span class="tag">VPC Design</span>
-          <span class="tag">Security Groups</span>
-          <span class="tag">WebSocket scaling</span>
-        </div>
-      </div>
-      <div class="skill-card fade-in">
-        <div class="skill-icon">🖥️</div>
-        <div class="skill-title">SysAdmin & Scripting</div>
-        <div class="skill-tags">
-          <span class="tag">Linux (Ubuntu)</span>
-          <span class="tag">Windows Server 2025</span>
-          <span class="tag">Active Directory</span>
-          <span class="tag">VMware</span>
-          <span class="tag">Bash</span>
-          <span class="tag">Python</span>
-          <span class="tag">PowerShell</span>
-        </div>
-      </div>
-    </div>
+<div class="container">
+  <div class="sh fi"><span class="sh-prompt">david@eti:~$</span><span class="sh-cmd">ls -la skills/</span><div class="sh-line"></div></div>
+  <div class="skills-table fi">
+    <div class="skills-table-header"><span>category</span><span>tools</span><span>level</span></div>
+    <div class="skill-row"><span class="skill-cat">cloud &amp; iac</span><div class="skill-tags"><span class="stag hi">ECS Fargate</span><span class="stag hi">ECR</span><span class="stag hi">IAM</span><span class="stag hi">ALB</span><span class="stag hi">VPC</span><span class="stag hi">CloudWatch</span><span class="stag hi">S3</span><span class="stag hi">SSM</span><span class="stag hi">Secrets Manager</span><span class="stag gr">Terraform</span></div><span class="skill-level level-prod">production</span></div>
+    <div class="skill-row"><span class="skill-cat">containers</span><div class="skill-tags"><span class="stag gr">Docker</span><span class="stag">Multi-stage</span><span class="stag">Compose</span><span class="stag">Trivy</span><span class="stag hi">Kubernetes</span><span class="stag hi">Helm</span></div><span class="skill-level level-prod">prod + learning</span></div>
+    <div class="skill-row"><span class="skill-cat">ci/cd</span><div class="skill-tags"><span class="stag gr">GitHub Actions</span><span class="stag">OIDC</span><span class="stag">Immutable tags</span><span class="stag">Pipeline gates</span><span class="stag">ECS deploy</span></div><span class="skill-level level-prod">production</span></div>
+    <div class="skill-row"><span class="skill-cat">observability</span><div class="skill-tags"><span class="stag hi">CloudWatch</span><span class="stag">JSON logging</span><span class="stag">ALB checks</span><span class="stag hi">Grafana</span><span class="stag hi">Prometheus</span></div><span class="skill-level level-learn">prod + learning</span></div>
+    <div class="skill-row"><span class="skill-cat">networking</span><div class="skill-tags"><span class="stag">TCP/IP</span><span class="stag">DNS</span><span class="stag">NAT</span><span class="stag">CIDR</span><span class="stag">VPC Design</span><span class="stag">Security Groups</span><span class="stag">WebSocket</span></div><span class="skill-level level-prod">production</span></div>
+    <div class="skill-row"><span class="skill-cat">sysadmin</span><div class="skill-tags"><span class="stag">Linux (Ubuntu)</span><span class="stag">Windows Server 2025</span><span class="stag">Active Directory</span><span class="stag">VMware</span><span class="stag">WSL2</span></div><span class="skill-level level-prod">lab + prod</span></div>
+    <div class="skill-row"><span class="skill-cat">scripting</span><div class="skill-tags"><span class="stag gr">Bash</span><span class="stag hi">Python</span><span class="stag">PowerShell</span></div><span class="skill-level level-prod">production</span></div>
+    <div class="skill-row"><span class="skill-cat">databases</span><div class="skill-tags"><span class="stag">MongoDB Atlas</span><span class="stag hi">Redis</span><span class="stag">ElastiCache</span><span class="stag">SSM secrets</span></div><span class="skill-level level-prod">production</span></div>
   </div>
+</div>
 </section>
-
-<!-- PROJECTS -->
 <section id="projects">
-  <div class="container">
-    <div class="fade-in">
-      <div class="section-label">// 03 — Projects</div>
-      <h2 class="section-heading">What I've built</h2>
+<div class="container">
+  <div class="sh fi"><span class="sh-prompt">david@eti:~$</span><span class="sh-cmd">systemctl list-units --state=running</span><div class="sh-line"></div></div>
+  <div class="service-card fi">
+    <div class="service-header">
+      <span class="service-name">SERVICE: novagram-prod</span>
+      <span class="service-status-badge badge-ok">● HEALTHY</span>
+      <span style="font-size:11px;color:var(--sub)">REGION: eu-west-1 · ORCH: ECS Fargate</span>
+      <div class="service-links">
+        <a href="https://github.com/EtiDavid/Novagram" target="_blank" class="service-link">github ↗</a>
+        <a href="#incidents" class="service-link">incidents ↗</a>
+      </div>
     </div>
-
-    <div class="projects-list">
-
-      <!-- NOVAGRAM -->
-      <div class="project-card fade-in">
-        <div class="project-header">
-          <div class="project-meta">
-            <div class="project-badge">Active — Production</div>
-            <div class="project-title">Novagram</div>
-            <div class="project-desc">
-              A production-grade real-time chat application built as a DevOps learning vehicle. 
-              Full AWS ECS Fargate deployment with modular Terraform infrastructure, 
-              GitHub Actions CI/CD with OIDC auth, Redis Pub/Sub for WebSocket scaling, 
-              and a WhatsApp-style frontend. Three shipped versions with increasing infrastructure complexity.
-            </div>
-          </div>
-          <div class="project-links">
-            <a href="https://github.com/EtiDavid/Novagram" target="_blank" class="project-link">GitHub ↗</a>
-            <a href="#documentation" class="project-link">Docs ↗</a>
-          </div>
-        </div>
-
-        <!-- 
-          ARCHITECTURE DIAGRAM SLOT
-          To add your architecture image:
-          1. Create an images/ folder in your repo
-          2. Save your diagram as images/novagram-arch.png
-          3. Replace the div below with:
-          <div class="project-arch">
-            <img src="images/novagram-arch.png" alt="Novagram Architecture" />
-          </div>
-        -->
-        <div class="project-arch" title="Add architecture diagram: images/novagram-arch.png">
-          <div style="font-size:28px;margin-bottom:8px">🏗️</div>
-          <div class="project-arch-label">Architecture diagram — add images/novagram-arch.png</div>
-        </div>
-
-        <div class="project-body">
-          <div class="project-highlights">
-            <div class="highlight">Multi-container ECS Fargate with ALB path-based routing</div>
-            <div class="highlight">Modular Terraform: VPC, IAM, ALB, ECS, CloudWatch, SSM</div>
-            <div class="highlight">GitHub Actions OIDC — no stored AWS credentials</div>
-            <div class="highlight">Redis Pub/Sub for multi-instance WebSocket delivery</div>
-            <div class="highlight">Trivy vulnerability scanning with documented CVE policy</div>
-            <div class="highlight">Enhanced /health endpoint — MongoDB + Redis readiness</div>
-            <div class="highlight">Deployment circuit breaker with automatic rollback</div>
-            <div class="highlight">S3 presigned URL avatar uploads via task role</div>
-          </div>
-          <div class="project-stack">
-            <span class="stack-tag">Node.js</span>
-            <span class="stack-tag">React</span>
-            <span class="stack-tag">Socket.IO</span>
-            <span class="stack-tag">MongoDB Atlas</span>
-            <span class="stack-tag">Redis</span>
-            <span class="stack-tag">Docker</span>
-            <span class="stack-tag">ECS Fargate</span>
-            <span class="stack-tag">Terraform</span>
-            <span class="stack-tag">GitHub Actions</span>
-            <span class="stack-tag">AWS ALB</span>
-            <span class="stack-tag">CloudWatch</span>
-            <span class="stack-tag">Trivy</span>
-          </div>
+    <div class="service-body">
+      <div class="service-meta">
+        <div class="kv-list">
+          <div class="kv" style="padding:4px 0"><span class="kv-k" style="font-size:10px">VERSION</span><span class="kv-v" style="font-size:11px">v3.0.0</span></div>
+          <div class="kv" style="padding:4px 0"><span class="kv-k" style="font-size:10px">ORCHESTRATION</span><span class="kv-v" style="font-size:11px">ECS Fargate</span></div>
+          <div class="kv" style="padding:4px 0"><span class="kv-k" style="font-size:10px">SCALING</span><span class="kv-v" style="font-size:11px">Redis Pub/Sub</span></div>
+          <div class="kv" style="padding:4px 0"><span class="kv-k" style="font-size:10px">IaC</span><span class="kv-v" style="font-size:11px">Terraform (modular)</span></div>
+          <div class="kv" style="padding:4px 0"><span class="kv-k" style="font-size:10px">CI/CD</span><span class="kv-v" style="font-size:11px">GitHub Actions OIDC</span></div>
+          <div class="kv" style="padding:4px 0"><span class="kv-k" style="font-size:10px">SCANNING</span><span class="kv-v" style="font-size:11px">Trivy</span></div>
+          <div class="kv" style="padding:4px 0;border-bottom:none"><span class="kv-k" style="font-size:10px">DATABASE</span><span class="kv-v" style="font-size:11px">MongoDB Atlas + Redis</span></div>
         </div>
       </div>
-
-      <!-- HOME LAB -->
-      <div class="project-card fade-in">
-        <div class="project-header">
-          <div class="project-meta">
-            <div class="project-badge" style="background:rgba(129,140,248,0.08);border-color:rgba(129,140,248,0.2);color:var(--accent2);">In Progress</div>
-            <div class="project-title">Windows Server & Linux Home Lab</div>
-            <div class="project-desc">
-              Enterprise SysAdmin simulation running on VMware Workstation. 
-              Domain Controller with Active Directory, DNS, GPO-enforced policies across a VM fleet. 
-              Includes hypervisor conflict resolution and structured Linux administration curriculum targeting RHCSA.
-            </div>
-          </div>
-          <div class="project-links">
-            <a href="#" class="project-link" style="opacity:0.4;cursor:default">Private</a>
-          </div>
-        </div>
-        <div class="project-body">
-          <div class="project-highlights">
-            <div class="highlight">Windows Server 2025 Domain Controller with AD DS and DNS</div>
-            <div class="highlight">Member server and client VM joined to domain with GPO policies</div>
-            <div class="highlight">Resolved VBS/Hyper-V and VMware VPMC conflicts on Windows 11</div>
-            <div class="highlight">Paired batch scripts to toggle between VMware and WSL2/Docker modes</div>
-            <div class="highlight">Structured RHCSA curriculum on Ubuntu VMs</div>
-            <div class="highlight">Hypervisor-level troubleshooting and network configuration</div>
-          </div>
-          <div class="project-stack">
-            <span class="stack-tag">VMware Workstation</span>
-            <span class="stack-tag">Windows Server 2025</span>
-            <span class="stack-tag">Active Directory</span>
-            <span class="stack-tag">DNS</span>
-            <span class="stack-tag">GPO</span>
-            <span class="stack-tag">Ubuntu</span>
-            <span class="stack-tag">WSL2</span>
-            <span class="stack-tag">Bash</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- NOVAFLY -->
-      <div class="project-card fade-in">
-        <div class="project-header">
-          <div class="project-meta">
-            <div class="project-badge">upcoming — planning </div>
-            <div class="project-title">Novafly</div>
-            <div class="project-desc">
-              Coming Soon
-            </div>
-          </div>
-          <div class="project-links">
-            <a href="https://github.com/EtiDavid/Novafly" target="_blank" class="project-link">GitHub ↗</a>
-            <a href="#documentation" class="project-link">Docs ↗</a>
-          </div>
-        </div>
-
-        <!--
-          ARCHITECTURE DIAGRAM SLOT
-          To add your architecture image:
-          1. Create an images/ folder in your repo
-          2. Save your diagram as images/novagram-arch.png
-          3. Replace the div below with:
-          <div class="project-arch">
-            <img src="images/novagram-arch.png" alt="Novagram Architecture" />
-          </div>
-        -->
-        <div class="project-arch" title="Add architecture diagram: images/novagram-arch.png">
-          <div style="font-size:28px;margin-bottom:8px">🏗️</div>
-          <div class="project-arch-label">Architecture diagram — add images/novagram-arch.png</div>
-        </div>
-
-        <div class="project-body">
-          <div class="project-highlights">
-            <div class="highlight">Multi-container ECS Fargate with ALB path-based routing</div>
-            <div class="highlight">Modular Terraform: VPC, IAM, ALB, ECS, CloudWatch, SSM</div>
-            <div class="highlight">GitHub Actions OIDC — no stored AWS credentials</div>
-            <div class="highlight">Redis Pub/Sub for multi-instance WebSocket delivery</div>
-            <div class="highlight">Trivy vulnerability scanning with documented CVE policy</div>
-            <div class="highlight">Enhanced /health endpoint — MongoDB + Redis readiness</div>
-            <div class="highlight">Deployment circuit breaker with automatic rollback</div>
-            <div class="highlight">S3 presigned URL avatar uploads via task role</div>
-          </div>
-          <div class="project-stack">
-            <span class="stack-tag">Node.js</span>
-            <span class="stack-tag">React</span>
-            <span class="stack-tag">Socket.IO</span>
-            <span class="stack-tag">MongoDB Atlas</span>
-            <span class="stack-tag">Redis</span>
-            <span class="stack-tag">Docker</span>
-            <span class="stack-tag">ECS Fargate</span>
-            <span class="stack-tag">Terraform</span>
-            <span class="stack-tag">GitHub Actions</span>
-            <span class="stack-tag">AWS ALB</span>
-            <span class="stack-tag">CloudWatch</span>
-            <span class="stack-tag">Trivy</span>
-          </div>
-        </div>
-      </div>
-
+      <div class="service-desc">Production-grade real-time chat application built as a DevOps learning vehicle. Multi-container ECS Fargate with ALB path-based routing, modular Terraform infrastructure, OIDC-authenticated GitHub Actions CI/CD, and Redis Pub/Sub solving the WebSocket horizontal scaling problem.<br/><br/>Shipped three versions with increasing infrastructure complexity — Redis presence tracking, contact request system, message delivery ticks, S3 presigned avatar uploads, and full WhatsApp-style dark UI.</div>
+    </div>
+    <div class="service-arch">
+      <div class="arch-label">architecture diagram</div>
+      <img src="images/novagram-arch.png" alt="Novagram Architecture" class="arch-img" onerror="this.outerHTML='&lt;div class=arch-placeholder&gt;architecture diagram — add images/novagram-arch.png&lt;/div&gt;'"/>
+    </div>
+    <div class="service-highlights">
+      <span class="hl">ALB path-based routing: /socket.io/* → backend, /* → frontend</span>
+      <span class="hl">Modular Terraform: VPC, IAM, ALB, ECS, CloudWatch, SSM</span>
+      <span class="hl">OIDC keyless auth — no stored AWS credentials</span>
+      <span class="hl">Redis Pub/Sub across ECS task instances</span>
+      <span class="hl">Deployment circuit breaker + automatic rollback</span>
+      <span class="hl">/health checks MongoDB + Redis — 503 degraded on failure</span>
+      <span class="hl">Trivy scanning with documented CVE deferral policy</span>
+      <span class="hl">S3 presigned URLs for avatar uploads via task role</span>
+    </div>
+    <div class="service-stack">
+      <span class="stag">Node.js</span><span class="stag">React</span><span class="stag">Socket.IO</span><span class="stag">MongoDB Atlas</span><span class="stag">Redis</span><span class="stag">Docker</span><span class="stag">ECS Fargate</span><span class="stag">Terraform</span><span class="stag">GitHub Actions</span><span class="stag">ALB</span><span class="stag">CloudWatch</span><span class="stag">Trivy</span>
     </div>
   </div>
-</section>
-
-<!-- DOCUMENTATION -->
-<section id="documentation">
-  <div class="container">
-    <div class="fade-in">
-      <div class="section-label">// 04 — Documentation</div>
-      <h2 class="section-heading">Novagram learning journal</h2>
-      <p style="color:var(--sub);font-size:13px;max-width:600px;margin-bottom:0">
-        A structured 8-module curriculum built on the real Novagram codebase. 
-        Every concept tied to production code, real incidents, and break/fix scenarios.
-      </p>
+  <div class="service-card fi">
+    <div class="service-header">
+      <span class="service-name">SERVICE: homelab-infra</span>
+      <span class="service-status-badge badge-warn">⟳ IN PROGRESS</span>
+      <span style="font-size:11px;color:var(--sub)">ENV: local · HYPERVISOR: VMware · TARGET: RHCSA</span>
+      <div class="service-links"><a href="#" class="service-link" style="opacity:.4;cursor:default">private</a></div>
     </div>
-    <div class="docs-grid">
-      <div class="doc-card fade-in">
-        <div class="doc-number">Module 01</div>
-        <div class="doc-title">Docker & Containers</div>
-        <div class="doc-desc">Layers, build cache, multi-stage builds, .dockerignore, npm ci, non-root users, Netflix-scale image practices.</div>
-        <div class="doc-topics">
-          <span class="doc-topic">Layers</span>
-          <span class="doc-topic">Multi-stage</span>
-          <span class="doc-topic">Security</span>
+    <div class="service-body">
+      <div class="service-meta">
+        <div class="kv-list">
+          <div class="kv" style="padding:4px 0"><span class="kv-k" style="font-size:10px">HYPERVISOR</span><span class="kv-v" style="font-size:11px">VMware Workstation</span></div>
+          <div class="kv" style="padding:4px 0"><span class="kv-k" style="font-size:10px">OS</span><span class="kv-v" style="font-size:11px">Win Server 2025 + Ubuntu</span></div>
+          <div class="kv" style="padding:4px 0"><span class="kv-k" style="font-size:10px">DIRECTORY</span><span class="kv-v" style="font-size:11px">Active Directory DS</span></div>
+          <div class="kv" style="padding:4px 0;border-bottom:none"><span class="kv-k" style="font-size:10px">TARGET</span><span class="kv-v yellow" style="font-size:11px">RHCSA</span></div>
         </div>
       </div>
-      <div class="doc-card fade-in">
-        <div class="doc-number">Module 02</div>
-        <div class="doc-title">Networking & VPC</div>
-        <div class="doc-desc">VPC design, CIDR, IGW, route tables, public vs private subnets, security groups, NAT gateway trade-offs, AZ resilience.</div>
-        <div class="doc-topics">
-          <span class="doc-topic">VPC</span>
-          <span class="doc-topic">CIDR</span>
-          <span class="doc-topic">Security Groups</span>
-        </div>
+      <div class="service-desc">Enterprise SysAdmin simulation on VMware Workstation. Windows Server 2025 Domain Controller with AD DS, DNS, and Group Policy across a VM fleet. Resolved VBS/Hyper-V and VMware VPMC conflicts using paired batch scripts. Running structured RHCSA curriculum on Ubuntu VMs.</div>
+    </div>
+    <div class="service-highlights">
+      <span class="hl">Domain Controller: AD DS + DNS + GPO policies</span>
+      <span class="hl">Member server + client VM joined to domain</span>
+      <span class="hl">Resolved hypervisor VPMC/VBS conflict — batch toggle scripts</span>
+      <span class="hl">Structured RHCSA curriculum: filesystems, networking, systemd</span>
+    </div>
+    <div class="service-stack">
+      <span class="stag">VMware Workstation</span><span class="stag">Windows Server 2025</span><span class="stag">Active Directory</span><span class="stag">DNS</span><span class="stag">GPO</span><span class="stag">Ubuntu</span><span class="stag">WSL2</span><span class="stag">Bash</span>
+    </div>
+  </div>
+</div>
+</section>
+<section id="incidents">
+<div class="container">
+  <div class="sh fi"><span class="sh-prompt">david@eti:~$</span><span class="sh-cmd">cat /var/log/incidents.log</span><div class="sh-line"></div></div>
+  <div class="incident-log fi">
+    <div class="incident-log-header">
+      <span class="ilog-title">incident_log</span>
+      <span style="color:var(--sub);font-size:10px">novagram-prod</span>
+      <span style="margin-left:auto;color:var(--dim);font-size:10px">click row to expand</span>
+    </div>
+    <div class="incident-row" onclick="toggleInc(this)">
+      <div class="incident-summary"><span class="inc-id">INC-001</span><span class="inc-sev sev-high">HIGH</span><span class="inc-title">OIDC subject claim mismatch — pipeline cannot authenticate to AWS</span><span class="inc-date">Feb 2026</span><span class="inc-status resolved">✓ resolved</span></div>
+      <div class="incident-detail">
+        <div class="inc-section"><div class="inc-section-label">symptom</div><div class="inc-section-body">GitHub Actions pipeline fails at AWS authentication. Error: <code>Not authorized to perform sts:AssumeRoleWithWebIdentity</code>. Build and test pass. Only deploy fails.</div></div>
+        <div class="inc-section"><div class="inc-section-label">root cause</div><div class="inc-section-body">IAM OIDC trust policy subject claim condition didn't match the GitHub Actions token format. Token subject was <code>repo:EtiDavid/Novagram:ref:refs/heads/main</code> but the trust policy had a format mismatch — wildcard too broad in one place, too narrow in another.</div></div>
+        <div class="inc-section"><div class="inc-section-label">resolution</div><div class="inc-section-body">Updated IAM trust policy to match exact token subject format. Added a debug job to print decoded JWT claims before deploy. Documented the exact claim format in the repo README.</div></div>
+        <div class="inc-section"><div class="inc-section-label">lesson</div><div class="inc-section-body">Always verify the exact OIDC token subject claim format before writing the trust policy. GitHub format: <code>repo:ORG/REPO:ref:refs/heads/BRANCH</code>. Print the token in CI during initial setup — remove before merging.</div></div>
       </div>
-      <div class="doc-card fade-in">
-        <div class="doc-number">Module 03</div>
-        <div class="doc-title">ECS Fargate & Task Definitions</div>
-        <div class="doc-desc">Cluster, service, task definition, task — how they compose. Fargate vs EC2, desired count, deployment circuit breakers.</div>
-        <div class="doc-topics">
-          <span class="doc-topic">ECS</span>
-          <span class="doc-topic">Fargate</span>
-          <span class="doc-topic">Circuit Breaker</span>
-        </div>
+    </div>
+    <div class="incident-row" onclick="toggleInc(this)">
+      <div class="incident-summary"><span class="inc-id">INC-002</span><span class="inc-sev sev-high">HIGH</span><span class="inc-title">ALB health checks failing — all backend tasks marked unhealthy</span><span class="inc-date">Feb 2026</span><span class="inc-status resolved">✓ resolved</span></div>
+      <div class="incident-detail">
+        <div class="inc-section"><div class="inc-section-label">symptom</div><div class="inc-section-body">Deployment completes. ECS tasks show RUNNING. All backend targets marked UNHEALTHY in target group. Users see 503 immediately after deployment.</div></div>
+        <div class="inc-section"><div class="inc-section-label">root cause</div><div class="inc-section-body">Health check interval too short, grace period too low. ALB was hitting <code>/health</code> before Node.js finished connecting to MongoDB Atlas. Atlas connection takes 2–3s on cold start — task was already failing before the app was ready.</div></div>
+        <div class="inc-section"><div class="inc-section-label">resolution</div><div class="inc-section-body">Increased <code>health_check_grace_period_seconds</code> to 60s. Adjusted health check interval and unhealthy threshold. Updated <code>/health</code> to check mongoose connection state before returning 200.</div></div>
+        <div class="inc-section"><div class="inc-section-label">lesson</div><div class="inc-section-body">Grace period must exceed worst-case startup time including external dependencies. The health endpoint should check real readiness — not just that the HTTP server is responding.</div></div>
       </div>
-      <div class="doc-card fade-in">
-        <div class="doc-number">Module 04</div>
-        <div class="doc-title">Load Balancing & Routing</div>
-        <div class="doc-desc">ALB listeners, target groups, path-based routing, sticky sessions, WebSocket connection lifecycle during deployments.</div>
-        <div class="doc-topics">
-          <span class="doc-topic">ALB</span>
-          <span class="doc-topic">Sticky Sessions</span>
-          <span class="doc-topic">WebSocket</span>
-        </div>
+    </div>
+    <div class="incident-row" onclick="toggleInc(this)">
+      <div class="incident-summary"><span class="inc-id">INC-003</span><span class="inc-sev sev-med">MED</span><span class="inc-title">Terraform state drift — ECS service shows unexpected replace in plan</span><span class="inc-date">Mar 2026</span><span class="inc-status resolved">✓ resolved</span></div>
+      <div class="incident-detail">
+        <div class="inc-section"><div class="inc-section-label">symptom</div><div class="inc-section-body"><code>terraform plan</code> shows <code>aws_ecs_service.backend must be replaced</code> even though no ECS config was changed. Before and after values look identical on screen.</div></div>
+        <div class="inc-section"><div class="inc-section-label">root cause</div><div class="inc-section-body">AWS provider version upgrade changed how the cluster ARN was normalised. State stored the short name, provider now returned the full ARN. Terraform saw this as a change — <code>cluster</code> is an immutable attribute, so it forced replacement.</div></div>
+        <div class="inc-section"><div class="inc-section-label">resolution</div><div class="inc-section-body">Used <code>terraform state show</code> to inspect raw stored value. Values confirmed functionally identical. Added <code>lifecycle { ignore_changes = [cluster] }</code> with explanation. Pinned AWS provider version.</div></div>
+        <div class="inc-section"><div class="inc-section-label">lesson</div><div class="inc-section-body">Never apply a plan that destroys a production resource without understanding exactly why. Provider upgrades can silently change value normalisation. Always pin versions. Read the full plan — not just the summary.</div></div>
       </div>
-      <div class="doc-card fade-in">
-        <div class="doc-number">Module 05</div>
-        <div class="doc-title">IAM & Secrets Management</div>
-        <div class="doc-desc">Execution role vs task role, OIDC authentication flow, least-privilege policies, SSM Parameter Store as CI/CD bridge.</div>
-        <div class="doc-topics">
-          <span class="doc-topic">IAM</span>
-          <span class="doc-topic">OIDC</span>
-          <span class="doc-topic">SSM</span>
-        </div>
+    </div>
+    <div class="incident-row" onclick="toggleInc(this)">
+      <div class="incident-summary"><span class="inc-id">INC-004</span><span class="inc-sev sev-med">MED</span><span class="inc-title">MongoDB Atlas cluster paused — backend failing after idle period</span><span class="inc-date">Apr 2026</span><span class="inc-status resolved">✓ resolved</span></div>
+      <div class="incident-detail">
+        <div class="inc-section"><div class="inc-section-label">symptom</div><div class="inc-section-body">After setting ECS desired count to 0 for a month, restarting the service causes backend tasks to crash on startup. CloudWatch logs: <code>MongoServerError: connection refused</code>.</div></div>
+        <div class="inc-section"><div class="inc-section-label">root cause</div><div class="inc-section-body">MongoDB Atlas automatically pauses free-tier clusters after 60 days of inactivity. Cluster was in PAUSED state. ECS tasks start, Node.js attempts connection, Atlas refuses all connections.</div></div>
+        <div class="inc-section"><div class="inc-section-label">resolution</div><div class="inc-section-body">Resumed the Atlas cluster via console. Tasks reconnected automatically after ~2 minutes. Added Atlas status check to pre-deployment runbook. Set CloudWatch alarm on MongoDB connection errors.</div></div>
+        <div class="inc-section"><div class="inc-section-label">lesson</div><div class="inc-section-body">External managed services can change state independently. Always check upstream dependency status before debugging your own infra. A /health endpoint checking real connectivity would have surfaced this immediately.</div></div>
       </div>
-      <div class="doc-card fade-in">
-        <div class="doc-number">Module 06</div>
-        <div class="doc-title">CI/CD Pipelines</div>
-        <div class="doc-desc">Pipeline stage design, OIDC permissions, immutable tagging, Trivy CVE policy, concurrency groups, deployment verification.</div>
-        <div class="doc-topics">
-          <span class="doc-topic">CI/CD</span>
-          <span class="doc-topic">Trivy</span>
-          <span class="doc-topic">OIDC</span>
-        </div>
-      </div>
-      <div class="doc-card fade-in">
-        <div class="doc-number">Module 07</div>
-        <div class="doc-title">Observability</div>
-        <div class="doc-desc">Three pillars — logs, metrics, traces. Four golden signals. Structured JSON logging. CloudWatch Logs Insights. Alert design.</div>
-        <div class="doc-topics">
-          <span class="doc-topic">Metrics</span>
-          <span class="doc-topic">Logs</span>
-          <span class="doc-topic">Traces</span>
-        </div>
-      </div>
-      <div class="doc-card fade-in">
-        <div class="doc-number">Module 08</div>
-        <div class="doc-title">Scaling Patterns</div>
-        <div class="doc-desc">Auto scaling types, cooldown periods, graceful shutdown, WebSocket scale-in problem, Redis Pub/Sub as the real solution.</div>
-        <div class="doc-topics">
-          <span class="doc-topic">Auto Scaling</span>
-          <span class="doc-topic">Redis</span>
-          <span class="doc-topic">SIGTERM</span>
-        </div>
-      </div>
-      <div class="doc-card fade-in" style="border-style:dashed;opacity:0.5;cursor:default">
-        <div class="doc-number">Coming Soon</div>
-        <div class="doc-title">Kubernetes & Helm</div>
-        <div class="doc-desc">Migrating Novagram from ECS to EKS. Pods, deployments, services, ingress, Helm charts, HPA.</div>
-        <div class="doc-topics">
-          <span class="doc-topic">Kubernetes</span>
-          <span class="doc-topic">Helm</span>
-          <span class="doc-topic">EKS</span>
-        </div>
+    </div>
+    <div class="incident-row" onclick="toggleInc(this)" style="border-bottom:none">
+      <div class="incident-summary"><span class="inc-id">INC-005</span><span class="inc-sev sev-med">MED</span><span class="inc-title">Container naming mismatch — pipeline succeeds, wrong container on ALB</span><span class="inc-date">Mar 2026</span><span class="inc-status resolved">✓ resolved</span></div>
+      <div class="incident-detail">
+        <div class="inc-section"><div class="inc-section-label">symptom</div><div class="inc-section-body">CI/CD completes. ECS shows new task definition deployed. But health checks pass with old image — new code never reaches users.</div></div>
+        <div class="inc-section"><div class="inc-section-label">root cause</div><div class="inc-section-body">Container name in the task definition didn't match the name referenced in the ECS service load balancer configuration. ECS uses the container name to identify which port to register with the target group — mismatch meant old container was still being used.</div></div>
+        <div class="inc-section"><div class="inc-section-label">resolution</div><div class="inc-section-body">Aligned container name across task definition, service LB config, and the GitHub Actions render step. Added pipeline verification step that confirms the running task image SHA matches the deployed SHA.</div></div>
+        <div class="inc-section"><div class="inc-section-label">lesson</div><div class="inc-section-body">A green pipeline does not mean the right code is running. Always verify what's actually deployed by checking the running task image tag. The verify stage exists for exactly this reason.</div></div>
       </div>
     </div>
   </div>
+</div>
 </section>
-
-<!-- JOURNEY -->
 <section id="journey">
-  <div class="container">
-    <div class="fade-in">
-      <div class="section-label">// 05 — Journey</div>
-      <h2 class="section-heading">How I got here</h2>
-    </div>
-    <div class="timeline fade-in">
-      <div class="timeline-item">
-        <div class="timeline-date">2022 – 2026</div>
-        <div class="timeline-title">BA Visual Effects — Howest University of Applied Sciences</div>
-        <div class="timeline-body">Studied procedural systems, technical pipelines, and production troubleshooting. Built a procedural lightning FX system in Houdini as graduation project. Developed the systems-thinking that transfers directly into infrastructure design.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-date">2024</div>
-        <div class="timeline-title">Foundations — CS50, Docker, Python, Linux</div>
-        <div class="timeline-body">Completed CS50, Python on RealPython, OverTheWire Bandit for Linux fundamentals. Built first containerised applications. Decided to pivot fully into cloud engineering.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-date">Early 2025</div>
-        <div class="timeline-title">Terraform, GitHub Actions, AWS ECS</div>
-        <div class="timeline-body">Completed Docker track, GitHub Actions (triggers, caching, OIDC, reusable workflows), Terraform (tutorial → production implementation). Started building Novagram as the vehicle for everything.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-date">Late 2025</div>
-        <div class="timeline-title">Novagram v1 — Production Deployment</div>
-        <div class="timeline-body">Shipped Novagram to AWS ECS Fargate with full CI/CD. Debugged OIDC subject claim mismatches, ECS task definition errors, Terraform state drift, ALB health check timing, container naming inconsistencies, and WebSocket scaling challenges. Real production debugging.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-date">Feb 2026</div>
-        <div class="timeline-title">Internship — Barco Immersive Experiences</div>
-        <div class="timeline-body">Content intern at Barco, Kortrijk. Produced technical visual content for enterprise AV display solutions. Gained exposure to enterprise-scale production infrastructure and cross-functional team coordination.</div>
-      </div>
-      <div class="timeline-item">
-        <div class="timeline-date">2026 — Now</div>
-        <div class="timeline-title">Structured DevOps Curriculum + Novagram v2/v3</div>
-        <div class="timeline-body">Completed an 8-module curriculum built on Novagram. Shipped v2 with Redis Pub/Sub, v3 with contact system, message delivery ticks, S3 avatars, presence tracking. Now learning Kubernetes and Helm for EKS migration. Actively applying for DevOps roles in Belgium and the Netherlands.</div>
-      </div>
-    </div>
+<div class="container">
+  <div class="sh fi"><span class="sh-prompt">david@eti:~$</span><span class="sh-cmd">git log --oneline --graph</span><div class="sh-line"></div></div>
+  <div class="deploy-timeline fi">
+    <div class="deploy-item"><div class="deploy-tag">2026 — present</div><div class="deploy-title">Novagram v2/v3 · Structured DevOps Curriculum · Job search</div><div class="deploy-body">Shipped Novagram v2 (Redis Pub/Sub, presence tracking) and v3 (contact requests, message ticks, S3 avatars). Completed 8-module DevOps curriculum on real codebase. Actively applying for DevOps roles. Next: Kubernetes (EKS) migration and AZ-900 certification.</div></div>
+    <div class="deploy-item"><div class="deploy-tag">Feb 2026</div><div class="deploy-title">Internship — Barco Immersive Experiences, Kortrijk</div><div class="deploy-body">Technical content production for enterprise AV display solutions. Cross-functional pipeline coordination with content teams, AV engineers, and technical stakeholders. Exposure to enterprise-scale production infrastructure.</div></div>
+    <div class="deploy-item"><div class="deploy-tag">Late 2025</div><div class="deploy-title">Novagram v1 — Production Deployment on AWS</div><div class="deploy-body">Shipped first production system: ECS Fargate, modular Terraform, GitHub Actions with OIDC. Debugged five real production incidents covering OIDC auth, health check timing, state drift, Atlas cluster pause, and container naming mismatches.</div></div>
+    <div class="deploy-item"><div class="deploy-tag">Early 2025</div><div class="deploy-title">Docker · GitHub Actions · Terraform · AWS ECS</div><div class="deploy-body">Full Docker track, GitHub Actions deep dive (OIDC, reusable workflows), Terraform tutorial to production. Started building Novagram as the vehicle for everything.</div></div>
+    <div class="deploy-item"><div class="deploy-tag">2024</div><div class="deploy-title">CS50 · Python · Linux (OverTheWire Bandit) · First containers</div><div class="deploy-body">Completed CS50, Python on RealPython, OverTheWire Bandit. Built first containerised applications. Made the deliberate decision to pivot from VFX into cloud engineering.</div></div>
+    <div class="deploy-item"><div class="deploy-tag">2022 — 2026</div><div class="deploy-title">BA Visual Effects — Howest University of Applied Sciences</div><div class="deploy-body">Procedural systems, technical pipelines, scripting, production troubleshooting. Graduation project: Procedural Lightning FX System in Houdini. Developed the systems-thinking that transfers directly into infrastructure.</div></div>
   </div>
+</div>
 </section>
-
-<!-- CERTIFICATIONS -->
 <section id="certs">
-  <div class="container">
-    <div class="fade-in">
-      <div class="section-label">// 06 — Certifications</div>
-      <h2 class="section-heading">Training & credentials</h2>
-    </div>
-    <div class="certs-grid">
-      <div class="cert-card fade-in">
-        <div class="cert-icon">🐳</div>
-        <div class="cert-name">Docker Fundamentals</div>
-        <div class="cert-status done">Completed</div>
-      </div>
-      <div class="cert-card fade-in">
-        <div class="cert-icon">⚙️</div>
-        <div class="cert-name">GitHub Actions CI/CD</div>
-        <div class="cert-status done">Completed</div>
-      </div>
-      <div class="cert-card fade-in">
-        <div class="cert-icon">🏗️</div>
-        <div class="cert-name">Terraform Fundamentals</div>
-        <div class="cert-status done">Completed</div>
-      </div>
-      <div class="cert-card fade-in">
-        <div class="cert-icon">☁️</div>
-        <div class="cert-name">AWS ECS Fargate Deployment</div>
-        <div class="cert-status done">Completed</div>
-      </div>
-      <div class="cert-card fade-in">
-        <div class="cert-icon">🖥️</div>
-        <div class="cert-name">Windows Server 2025 Admin</div>
-        <div class="cert-status done">Completed</div>
-      </div>
-      <div class="cert-card fade-in">
-        <div class="cert-icon">🔷</div>
-        <div class="cert-name">Azure Fundamentals AZ-900</div>
-        <div class="cert-status progress">In Progress</div>
-      </div>
-      <div class="cert-card fade-in">
-        <div class="cert-icon">⎈</div>
-        <div class="cert-name">Certified Kubernetes Administrator — CKA</div>
-        <div class="cert-status planned">Planned</div>
-      </div>
-      <div class="cert-card fade-in">
-        <div class="cert-icon">🏅</div>
-        <div class="cert-name">AWS Solutions Architect Associate</div>
-        <div class="cert-status planned">Planned</div>
-      </div>
-    </div>
+<div class="container">
+  <div class="sh fi"><span class="sh-prompt">david@eti:~$</span><span class="sh-cmd">cat certs.json</span><div class="sh-line"></div></div>
+  <div class="cert-table fi">
+    <div class="cert-table-header"><span>certification</span><span>provider</span><span>status</span></div>
+    <div class="cert-row"><span class="cert-name-cell">Docker Fundamentals</span><span class="cert-provider">Docker / self-study</span><span class="cert-status-cell badge-ok">✓ completed</span></div>
+    <div class="cert-row"><span class="cert-name-cell">GitHub Actions CI/CD</span><span class="cert-provider">GitHub / self-study</span><span class="cert-status-cell badge-ok">✓ completed</span></div>
+    <div class="cert-row"><span class="cert-name-cell">Terraform Fundamentals</span><span class="cert-provider">HashiCorp / self-study</span><span class="cert-status-cell badge-ok">✓ completed</span></div>
+    <div class="cert-row"><span class="cert-name-cell">AWS ECS Fargate Deployment</span><span class="cert-provider">AWS / self-study</span><span class="cert-status-cell badge-ok">✓ completed</span></div>
+    <div class="cert-row"><span class="cert-name-cell">Windows Server 2025 Administration</span><span class="cert-provider">Kevin Brown / Udemy</span><span class="cert-status-cell badge-ok">✓ completed</span></div>
+    <div class="cert-row"><span class="cert-name-cell">Microsoft Azure Fundamentals AZ-900</span><span class="cert-provider">Microsoft</span><span class="cert-status-cell badge-warn">⟳ in progress</span></div>
+    <div class="cert-row"><span class="cert-name-cell">Certified Kubernetes Administrator — CKA</span><span class="cert-provider">CNCF / Linux Foundation</span><span class="cert-status-cell" style="background:rgba(210,168,255,.08);border:1px solid rgba(210,168,255,.2);color:var(--purple)">→ planned</span></div>
+    <div class="cert-row"><span class="cert-name-cell">AWS Solutions Architect Associate</span><span class="cert-provider">Amazon Web Services</span><span class="cert-status-cell" style="background:rgba(210,168,255,.08);border:1px solid rgba(210,168,255,.2);color:var(--purple)">→ planned</span></div>
   </div>
+</div>
 </section>
-
-<!-- CONTACT -->
 <section id="contact">
-  <div class="container">
-    <div class="contact-inner">
-      <div class="contact-text fade-in">
-        <div class="section-label">// 07 — Contact</div>
-        <h2 class="section-heading">Let's work<br/>together</h2>
-        <p>
-          I'm actively looking for DevOps, Cloud, and SysAdmin roles in Belgium and the Netherlands 
-          from May 2026. Open to full-time, hybrid, or remote. 
-          Work authorisation: Belgium Student Residence Permit.
-        </p>
-        <div class="contact-links">
-          <a href="mailto:etidavid26@gmail.com" class="contact-link">
-            <span class="contact-link-icon">✉️</span>
-            <div>
-              <span class="contact-link-label">Email</span>
-              <span class="contact-link-value">etidavid26@gmail.com</span>
-            </div>
-          </a>
-          <a href="https://github.com/EtiDavid" target="_blank" class="contact-link">
-            <span class="contact-link-icon">💻</span>
-            <div>
-              <span class="contact-link-label">GitHub</span>
-              <span class="contact-link-value">github.com/EtiDavid</span>
-            </div>
-          </a>
-          <a href="https://www.linkedin.com/in/eti-david/" target="_blank" class="contact-link">
-            <span class="contact-link-icon">🔗</span>
-            <div>
-              <span class="contact-link-label">LinkedIn</span>
-              <span class="contact-link-value">linkedin.com/in/eti-david</span>
-            </div>
-          </a>
-          <a href="tel:+32484829086" class="contact-link">
-            <span class="contact-link-icon">📞</span>
-            <div>
-              <span class="contact-link-label">Phone</span>
-              <span class="contact-link-value">+32 484 82 90 86</span>
-            </div>
-          </a>
-        </div>
+<div class="container">
+  <div class="sh fi"><span class="sh-prompt">david@eti:~$</span><span class="sh-cmd">ssh recruiter@david.eti</span><div class="sh-line"></div></div>
+  <div class="contact-grid fi">
+    <div class="panel">
+      <div class="panel-header"><span class="panel-header-title">connect.conf</span></div>
+      <div class="panel-body">
+        <a href="mailto:etidavid26@gmail.com" class="connect-link"><span class="connect-icon">✉</span><span class="connect-label">email</span><span>etidavid26@gmail.com</span></a>
+        <a href="https://github.com/EtiDavid" target="_blank" class="connect-link"><span class="connect-icon">⌥</span><span class="connect-label">github</span><span>github.com/EtiDavid</span></a>
+        <a href="https://www.linkedin.com/in/eti-david/" target="_blank" class="connect-link"><span class="connect-icon">⌘</span><span class="connect-label">linkedin</span><span>linkedin.com/in/eti-david</span></a>
+        <a href="tel:+32484829086" class="connect-link"><span class="connect-icon">☎</span><span class="connect-label">phone</span><span>+32 484 82 90 86</span></a>
+        <a href="David_Eti_CV.pdf" target="_blank" class="connect-link"><span class="connect-icon">↓</span><span class="connect-label">resume</span><span>David_Eti_CV.pdf</span></a>
       </div>
-
-      <div class="availability-card fade-in">
-        <div class="availability-header">
-          <div class="avail-dot"></div>
-          <div class="avail-title">Available for opportunities</div>
-        </div>
-        <div class="avail-items">
-          <div class="avail-item">Full-time DevOps / Cloud / SysAdmin roles</div>
-          <div class="avail-item">Belgium and the Netherlands</div>
-          <div class="avail-item">On-site, hybrid, or remote</div>
-          <div class="avail-item">Available from May 2026</div>
-          <div class="avail-item">English fluent — Dutch actively learning</div>
-          <div class="avail-item">Work authorisation: Belgium Student Permit</div>
-        </div>
-        <div style="margin-top:32px;padding-top:24px;border-top:1px solid var(--border)">
-          <div style="font-size:11px;color:var(--sub);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px">Currently learning</div>
-          <div style="display:flex;flex-wrap:wrap;gap:8px">
-            <span class="tag">Kubernetes (EKS)</span>
-            <span class="tag">Helm</span>
-            <span class="tag">Grafana</span>
-            <span class="tag">Prometheus</span>
-            <span class="tag">Azure AZ-900</span>
-          </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><span class="panel-header-title">availability.conf</span><span style="color:var(--green);font-size:10px">● open_to_work=true</span></div>
+      <div class="panel-body">
+        <div class="kv-list">
+          <div class="kv"><span class="kv-k">ROLES</span><span class="kv-v">DevOps · Cloud · SysAdmin</span></div>
+          <div class="kv"><span class="kv-k">REGION</span><span class="kv-v">Belgium · Netherlands</span></div>
+          <div class="kv"><span class="kv-k">MODE</span><span class="kv-v">on-site · hybrid · remote</span></div>
+          <div class="kv"><span class="kv-k">FROM</span><span class="kv-v">May 2026</span></div>
+          <div class="kv"><span class="kv-k">AUTH</span><span class="kv-v">Belgium Student Permit</span></div>
+          <div class="kv"><span class="kv-k">EN</span><span class="kv-v green">fluent</span></div>
+          <div class="kv"><span class="kv-k">NL</span><span class="kv-v yellow">actively learning</span></div>
+          <div class="kv"><span class="kv-k">RESPONSE</span><span class="kv-v green">&lt; 24h</span></div>
         </div>
       </div>
     </div>
   </div>
+</div>
 </section>
-
-<!-- FOOTER -->
+</main>
 <footer>
-  <div class="footer-left">
-    Built by <span style="color:var(--accent)">David Eti</span> — DevOps & Cloud Infrastructure Engineer
-  </div>
-  <div class="footer-right">
-    Belgium <span>·</span> Open to work <span>·</span> <span>etidavid26@gmail.com</span>
-  </div>
+  <div class="footer-left">david@eti:~$ <span style="color:var(--green)">_</span></div>
+  <div class="footer-right">Belgium · <span>etidavid26@gmail.com</span> · open to work</div>
 </footer>
-
 <script>
-  // ── FADE IN ON SCROLL ──────────────────────────────────────
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.1 });
+const logLines=['INFO  ecs-service novagram-backend healthy tasks=2/2','INFO  deployment successful sha=a1b2c3d','INFO  redis connected host=elasticache latency=1ms','INFO  health-check /health 200 OK db=ok redis=ok','INFO  alb target-group backend healthy 2/2','INFO  terraform state clean no-drift','INFO  ci-pipeline passed trivy-scan=0-critical','INFO  ecs cpu=24% tasks=2 desired=2','INFO  mongodb-atlas connected cluster0 ping=12ms','WARN  kubernetes loading module=in-progress','INFO  github-actions oidc auth ok role=deploy','INFO  cloudwatch logs flushed novagram-backend','INFO  ssm parameter read /novagram/dev/redis_host'];
+const stream=document.getElementById('log-stream');
+function addLog(){const l=document.createElement('span');l.className='log-line';l.textContent=logLines[Math.floor(Math.random()*logLines.length)];l.style.animationDuration=(20+Math.random()*14).toFixed(1)+'s';l.style.animationDelay=(Math.random()*6).toFixed(1)+'s';l.style.left=(Math.random()*70).toFixed(0)+'%';stream.appendChild(l);l.addEventListener('animationend',()=>l.remove())}
+for(let i=0;i<10;i++)setTimeout(addLog,i*500);setInterval(addLog,1800);
 
-  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+const bootSeq=[{t:'[ david@eti ] booting infrastructure profile...',c:'dim',d:0},{t:'Loading AWS credentials (OIDC)...    [  OK  ]',c:'',d:200},{t:'Starting Redis adapter...            [  OK  ]',c:'',d:400},{t:'Connecting to MongoDB Atlas...       [  OK  ]',c:'',d:600},{t:'ECS tasks: healthy (2/2)...          [  OK  ]',c:'',d:800},{t:'Loading Kubernetes module...         [ WAIT ]',c:'dim',d:1000},{t:'Starting portfolio service...        [  OK  ]',c:'',d:1200},{t:'','c':'',d:1350},{t:'Welcome. Session started.',c:'',d:1400}];
+const bootEl=document.getElementById('boot-lines');
+bootSeq.forEach(({t,c,d})=>{setTimeout(()=>{const s=document.createElement('span');s.className='boot-line'+(c?' '+c:'');s.textContent=t;bootEl.appendChild(s)},d)});
+setTimeout(()=>document.getElementById('boot-screen').classList.add('done'),2200);
 
-  // ── MOBILE NAV ─────────────────────────────────────────────
-  function toggleMobileNav() {
-    const links = document.querySelector('.nav-links');
-    const isVisible = links.style.display === 'flex';
-    if (isVisible) {
-      links.style.display = '';
-    } else {
-      links.style.display = 'flex';
-      links.style.flexDirection = 'column';
-      links.style.position = 'absolute';
-      links.style.top = '64px';
-      links.style.left = '0';
-      links.style.right = '0';
-      links.style.background = 'rgba(8,13,24,0.98)';
-      links.style.padding = '20px 24px';
-      links.style.borderBottom = '1px solid rgba(255,255,255,0.07)';
-      links.style.backdropFilter = 'blur(20px)';
-      links.style.zIndex = '99';
-    }
-  }
+function updateClock(){const t=new Date().toTimeString().split(' ')[0];const el=document.getElementById('live-time');if(el)el.textContent=t}
+updateClock();setInterval(updateClock,1000);
 
-  // Close mobile nav on link click
-  document.querySelectorAll('.nav-links a').forEach(a => {
-    a.addEventListener('click', () => {
-      const links = document.querySelector('.nav-links');
-      links.style.display = '';
-    });
+setTimeout(()=>{
+  [['bar-cpu','val-cpu',24,'#8bff7a','%'],['bar-mem','val-mem',41,'#58a6ff','%'],['bar-lrn','val-lrn',78,'#ffb86b','%']].forEach(([b,v,val,col,s])=>{
+    const bar=document.getElementById(b),txt=document.getElementById(v);
+    if(bar){bar.style.width=val+'%';bar.style.background=col}
+    if(txt)txt.textContent=val+s;
   });
+},2400);
 
-  // ── ACTIVE NAV LINK ON SCROLL ──────────────────────────────
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.nav-links a');
+function toggleInc(row){row.querySelector('.incident-detail').classList.toggle('open')}
 
-  window.addEventListener('scroll', () => {
-    let current = '';
-    sections.forEach(section => {
-      const sectionTop = section.offsetTop - 100;
-      if (window.scrollY >= sectionTop) {
-        current = section.getAttribute('id');
-      }
-    });
-    navLinks.forEach(link => {
-      link.style.color = '';
-      if (link.getAttribute('href') === `#${current}`) {
-        link.style.color = 'var(--accent)';
-      }
-    });
-  });
+function openPalette(){document.getElementById('cmd-overlay').classList.add('open');document.getElementById('cmd-input').focus()}
+function closePalette(e){if(e.target===document.getElementById('cmd-overlay'))document.getElementById('cmd-overlay').classList.remove('open')}
+function runCmd(cmd){
+  document.getElementById('cmd-overlay').classList.remove('open');
+  ({github:()=>window.open('https://github.com/EtiDavid','_blank'),linkedin:()=>window.open('https://www.linkedin.com/in/eti-david/','_blank'),cv:()=>window.open('David_Eti_CV.pdf','_blank'),projects:()=>document.getElementById('projects').scrollIntoView({behavior:'smooth'}),incidents:()=>document.getElementById('incidents').scrollIntoView({behavior:'smooth'}),contact:()=>document.getElementById('contact').scrollIntoView({behavior:'smooth'})})[cmd]?.()}
+
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openPalette()}if(e.key==='Escape')document.getElementById('cmd-overlay').classList.remove('open')});
+document.getElementById('cmd-input').addEventListener('keydown',e=>{if(e.key==='Enter'){const v=e.target.value.trim().toLowerCase();if(['github','linkedin','cv','projects','incidents','contact'].includes(v))runCmd(v)}});
+
+const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')}),{threshold:.08});
+document.querySelectorAll('.fi').forEach(el=>obs.observe(el));
+
+const secs=document.querySelectorAll('section[id]');
+const navAs=document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{let cur='';secs.forEach(s=>{if(window.scrollY>=s.offsetTop-80)cur=s.id});navAs.forEach(a=>{a.style.color=a.getAttribute('href')==='#'+cur?'var(--green)':''})},{passive:true});
 </script>
-
 </body>
 </html>
